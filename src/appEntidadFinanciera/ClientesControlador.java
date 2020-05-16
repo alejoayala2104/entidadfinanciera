@@ -57,7 +57,7 @@ public class ClientesControlador {
 		sentencia = cn.createStatement();
 		sentencia.executeUpdate(sentenciaSQL);	
 		sentencia.close();
-		System.out.println("Done");
+		
 		
 	}
 		

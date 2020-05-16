@@ -47,7 +47,7 @@ public class ClientesControlador {
 	
 	@FXML
 	public void registrarCliente(ActionEvent event)throws SQLException{
-		try {
+		
 		sentenciaSQL = "INSERT INTO cliente(cedula, nombres, telefono, email, direccion)";
 		sentenciaSQL = sentenciaSQL + "VALUES ('" + cedulaTF.getText() + "','"+nombresTF.getText()+"','"
 				+ telefonoTF.getText() + "','" + direccionTF.getText() + "','" + emailTF.getText() + "')";
@@ -58,10 +58,7 @@ public class ClientesControlador {
 		sentencia.executeUpdate(sentenciaSQL);	
 		sentencia.close();
 		System.out.println("Done");
-		}catch(Exception e) {
-			System.out.println("Error");
-			e.getStackTrace();
-		}
+		
 	}
 		
 	

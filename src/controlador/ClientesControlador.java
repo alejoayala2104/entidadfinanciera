@@ -19,13 +19,15 @@ public class ClientesControlador {
 	
 	//Conexion a base de datos
 	Conexion conexion = new Conexion();
-	Connection cn = conexion.getConexion();	
+	Connection cn = conexion.getConexion();
 	
 	//Creacion de la sentencia 
 	String sentenciaSQL;
 	Statement sentencia=null;
+	
 	//Creacion del ResultSet
 	ResultSet rs = null;
+	
 	//Registrar cliente
 	@FXML TextField cedulaTF;
 	@FXML TextField nombresTF;
@@ -51,21 +53,9 @@ public class ClientesControlador {
 	@FXML TextField actEmailTF;
 	@FXML TextField actDireccionTF;
 	
-	public boolean validarCliente(TextField tf) throws SQLException {		
-
-		sentencia = cn.createStatement();
-		sentenciaSQL = "SELECT * from cliente WHERE cedula like '" + tf.getText() +"';";
-		rs = sentencia.executeQuery(sentenciaSQL);
-		if(rs.next()) {//Si se ejecuta la consulta y hay resultados, significa que el usuario existe.
-			return true;
-		}
-		//rs.close();
-		//sentencia.;
-		return false;//Si no se encuentran resultados, significa que el usuario no existe.
-	}
 	
 	public void limpiarTextFields() {
-				
+		
 		cedulaTF.clear();
 		nombresTF.clear();
 		telefonoTF.clear();
@@ -84,9 +74,45 @@ public class ClientesControlador {
 		actNombresTF.clear();
 		actTelefonoTF.clear();
 		actEmailTF.clear();
-		actDireccionTF.clear();		
+		actDireccionTF.clear();
 	}
 	
+	//Este método ejecuta una sentencia SQL. Devuelve el ResultSet con el resultado de dicha consulta.
+	public ResultSet ejecutarSentencia(String sentenciaSQL) {
+		ResultSet resultSet=null;
+		try {
+			sentencia = cn.createStatement();
+			resultSet = sentencia.executeQuery(sentenciaSQL);
+		} catch (SQLException e) {
+			System.out.println("No se pudo ejecutar la sentencia en la base de datos.");
+		}
+		return resultSet;
+	}
+	
+	//Verifica si un cliente existe o no.
+	public boolean validarCliente(TextField tf) throws SQLException {
+
+		sentenciaSQL = "SELECT * from cliente WHERE cedula like '" + tf.getText() +"';";
+		rs = ejecutarSentencia(sentenciaSQL);
+		
+		//Si se ejecuta la consulta y hay resultados, significa que el usuario existe.
+		if(rs.next()) {
+			return true;
+		}
+		//Si no se encuentran resultados, significa que el usuario no existe.
+		return false;
+	}
+	
+	public void mostrarAlerta(AlertType tipoAlerta,String tituloVentana,String tituloMensaje,String mensaje) {
+		Alert alerta = new Alert(tipoAlerta);
+		alerta.setTitle(tituloVentana);
+		alerta.setHeaderText(tituloMensaje);
+		alerta.setContentText(mensaje);
+		alerta.showAndWait();		
+	}
+	
+	//Método que fuerza a los campos de cédula y teléfono a solo recibir entradas numéricas.
+	//También hace que no se pueda digitar del número 0 de primero.
 	@FXML
 	public void validarInputNumerico(KeyEvent event) {
 		try {
@@ -99,80 +125,65 @@ public class ClientesControlador {
 	}
 
 	@FXML
-	public void registrarCliente(ActionEvent event)throws SQLException{		
+	public void registrarCliente(ActionEvent event)throws SQLException{
 
 		if(cedulaTF.getText().isEmpty() || nombresTF.getText().isEmpty() || telefonoTF.getText().isEmpty() ||
-				direccionTF.getText().isEmpty() || emailTF.getText().isEmpty()) {
-			Alert alerta = new Alert(AlertType.ERROR);
-			alerta.setTitle("Error al ingresar");
-			alerta.setHeaderText(null);
-			alerta.setContentText("Todos los datos son obligatorios. Por favor rellenar los campos vacíos.");
-			alerta.showAndWait();
+				direccionTF.getText().isEmpty() || emailTF.getText().isEmpty()) {	
+			mostrarAlerta(AlertType.ERROR, "Error al ingresar", null, "Todos los datos son obligatorios. Por favor rellenar los campos vacíos.");			
 			return;
 		}
 		
-		if(validarCliente(cedulaTF)) {
-			Alert alerta = new Alert(AlertType.ERROR);
-			alerta.setTitle("Cliente existente");
-			alerta.setHeaderText(null);
-			alerta.setContentText("El cliente ya está registrado en el sistema.");
-			alerta.showAndWait();
+		//En caso de que el cliente exista, muestra la alerta y sale del metodo registrarCliente().
+		if(validarCliente(cedulaTF)) {			
+			mostrarAlerta(AlertType.ERROR, "Cliente existente", null, "El cliente ya está registrado en el sistema.");			
 			return;
 		}
 		
+		//Creación y ejecución de la sentencia.
 		sentenciaSQL = "INSERT INTO cliente(cedula, nombres, telefono, email, direccion)";
 		sentenciaSQL = sentenciaSQL + "VALUES ('" + cedulaTF.getText() + "','"+nombresTF.getText()+"','"
-				+ telefonoTF.getText() + "','" + direccionTF.getText() + "','" + emailTF.getText() + "')";
-		
-		
+				+ telefonoTF.getText() + "','" + direccionTF.getText() + "','" + emailTF.getText() + "')";		
 		sentencia = cn.createStatement();
-		sentencia.executeUpdate(sentenciaSQL);	
+		sentencia.execute(sentenciaSQL); //Es diferente a executeQuery porque en este metodo no se retorna nada.
 		sentencia.close();
 		
-		//Alerta de registro exitoso
-		Alert alerta = new Alert(AlertType.INFORMATION);
-		alerta.setTitle("Registro creado");
-		alerta.setHeaderText("Cliente registrado con éxito");
-		alerta.setContentText(null);
-		alerta.showAndWait();
+		//Alerta de registro exitoso.
+		mostrarAlerta(AlertType.INFORMATION, "Registro creado", "Cliente registrado con éxito", null);
 		
+		//Se cierra el ResultSet y el Statement
+		rs.close();
+		sentencia.close();
 	}
 		
 	
 	@FXML
 	public void consultarCliente(ActionEvent event) throws SQLException{	
 
+		//Valida que el campo de cédula no esté vacío.
 		if(buscarCedulaTF.getText().isEmpty()) {	
 			limpiarTextFields();
-			Alert alerta = new Alert(AlertType.ERROR);
-			alerta.setTitle("ERROR");
-			alerta.setHeaderText("Campo vacío");
-			alerta.setContentText("Por favor ingrese un valor en la casilla de búsqueda.");
-			alerta.showAndWait();
+			mostrarAlerta(AlertType.ERROR, "Error", "Campo vacío", "Por favor ingrese un valor en la casilla de búsqueda.");			
 			return;
 		}
-		sentencia = cn.createStatement();
-		sentenciaSQL = "SELECT * from cliente WHERE cedula like '" + buscarCedulaTF.getText() +"';";		
-		//Aqui esta en la fila 0 de la tabla(en los atributos)
-		ResultSet rs = sentencia.executeQuery(sentenciaSQL);
-		
-		if(validarCliente(buscarCedulaTF)==false) {
-			limpiarTextFields();
-			Alert alerta = new Alert(AlertType.ERROR);
-			alerta.setTitle("Cliente no encontrado");
-			alerta.setHeaderText(null);
-			alerta.setContentText("No se encontraron registros con la cédula ingresada.");
-			alerta.showAndWait();
-			return;
-		}
-		//Leo los siguientes resultados. Y los muestro en los texfield.
-		while(rs.next()) {
+	
+		//Ejecuta la consulta 
+		sentenciaSQL = "SELECT * from cliente WHERE cedula like '" + buscarCedulaTF.getText() +"';";
+		rs = ejecutarSentencia(sentenciaSQL);	
+	
+		//Si hay un resultado, mostrar sus datos en los textfield.
+		if(rs.next()) {
 			consCedulaTF.setText(rs.getString("cedula"));
 			consNombresTF.setText(rs.getString("nombres"));
 			consTelefonoTF.setText(rs.getString("telefono"));
 			consEmailTF.setText(rs.getString("email"));
 			consDireccionTF.setText(rs.getString("direccion"));
 			buscarCedulaTF.clear();
+		}
+		//Si no, dar aviso de que no se encontró el cliente, limpiar los textfield y salir del controlador consultarCliente().
+		else {
+			limpiarTextFields();
+			mostrarAlerta(AlertType.ERROR, "Cliente no encontrado", null, "No se encontraron registros con la cédula ingresada.");
+			return;
 		}
 		
 		//Se cierra el ResulSet. Porque es un cursor. Tambien se cierra el Statement.
@@ -181,75 +192,63 @@ public class ClientesControlador {
 	}
 	
 	@FXML
-	public void actualizarCliente(ActionEvent event) throws SQLException{		
+	public void actualizarCliente(ActionEvent event) throws SQLException{
 	
+		//Verificar que el campo de cedula no esté vacío.
 		if(actBuscarCedulaTF.getText().isEmpty()) {	
 			limpiarTextFields();
-			Alert alerta = new Alert(AlertType.ERROR);
-			alerta.setTitle("ERROR");
-			alerta.setHeaderText("Campo vacío");
-			alerta.setContentText("Por favor ingrese un valor en la casilla de búsqueda.");
-			alerta.showAndWait();
+			mostrarAlerta(AlertType.ERROR, "ERROR", "Campo vacío", "Por favor ingrese un valor en la casilla de búsqueda.");		
 			return;
 		}
-		sentencia = cn.createStatement();
-		sentenciaSQL = "SELECT * from cliente WHERE cedula like '" + actBuscarCedulaTF.getText() +"';";		
-		ResultSet rs = sentencia.executeQuery(sentenciaSQL);
-		//Validación.
-		if(validarCliente(actBuscarCedulaTF)==false) {
-			limpiarTextFields();
-			Alert alerta = new Alert(AlertType.ERROR);
-			alerta.setTitle("Cliente no encontrado");
-			alerta.setHeaderText(null);
-			alerta.setContentText("No se encontraron registros con la cédula ingresada.");
-			alerta.showAndWait();
-			return;
-		}
-		while(rs.next()) {
+
+		//Ejecuta la consulta.
+		sentenciaSQL = "SELECT * from cliente WHERE cedula like '" + actBuscarCedulaTF.getText() +"';";	
+		rs = ejecutarSentencia(sentenciaSQL);
+		
+		//Consultar cliente.
+		if(rs.next()) {
 			actCedulaTF.setText(rs.getString("cedula"));
 			actNombresTF.setText(rs.getString("nombres"));
 			actTelefonoTF.setText(rs.getString("telefono"));
 			actEmailTF.setText(rs.getString("email"));
 			actDireccionTF.setText(rs.getString("direccion"));			
+		}else {
+			limpiarTextFields();
+			mostrarAlerta(AlertType.ERROR, "Cliente no encontrado", null, "No se encontraron registros con la cédula ingresada.");
+			return;
 		}
+		
 		rs.close();
 		sentencia.close();
-		
 	}
 	
 	@FXML
 	public void actualizarClienteGuardar(ActionEvent event) throws SQLException{
 		
+		//Valida que no haya campos vacíos.
 		if(actCedulaTF.getText().isEmpty() || actNombresTF.getText().isEmpty() || actTelefonoTF.getText().isEmpty() ||
 				actEmailTF.getText().isEmpty() || actDireccionTF.getText().isEmpty()) {
-			Alert alerta = new Alert(AlertType.ERROR);
-			alerta.setTitle("Error al ingresar");
-			alerta.setHeaderText(null);
-			alerta.setContentText("Todos los datos son obligatorios. Por favor rellenar los campos vacíos.");
-			alerta.showAndWait();
+			mostrarAlerta(AlertType.ERROR, "Error al ingresar", null, "Todos los datos son obligatorios. Por favor rellenar los campos vacíos.");			
+			return;
+		}
+		String cedulaBuscada = actBuscarCedulaTF.getText();
+		//Verifica que la cédula que está ingresando no es de algún otro cliente ya existente.
+		if(actCedulaTF.getText().equals(cedulaBuscada)==false && validarCliente(actCedulaTF)) {
+			limpiarTextFields();
+			mostrarAlerta(AlertType.ERROR, "Cliente existente", "No se puede modificar la cedula ingresada", "El cliente con dicha cédula ya existe.");
 			return;
 		}
 		
-		if(validarCliente(actBuscarCedulaTF)) {
-			Alert alerta = new Alert(AlertType.ERROR);
-			alerta.setTitle("Cliente existente");
-			alerta.setHeaderText(null);
-			alerta.setContentText("La cedula ingresada ya pertenece a algún cliente registrado.");
-			alerta.showAndWait();
-			return;
-		}
-		
+		//Se ejecuta el update.
 		sentenciaSQL = "UPDATE cliente SET cedula = '"+actCedulaTF.getText()+"', nombres = '"+actNombresTF.getText()+"',telefono='"+actTelefonoTF.getText()+"',email='"+actEmailTF.getText()+"',direccion='"+actDireccionTF.getText()+"' WHERE cedula like '"+actBuscarCedulaTF.getText()+"'";
-		System.out.println(sentenciaSQL);
 		sentencia = cn.createStatement();
 		sentencia.executeUpdate(sentenciaSQL);
-		sentencia.close();
 		
-		Alert alerta = new Alert(AlertType.INFORMATION);
-		alerta.setTitle("Registro actualizado");
-		alerta.setHeaderText("Cambios guardados con éxito");
-		alerta.setContentText(null);
-		alerta.showAndWait();
+		//Mostrar mensaje de éxito.
+		mostrarAlerta(AlertType.INFORMATION, "Registro actualizado", "Cambios guardados con éxito", null);
+		
+		//Se cierra la sentencia.
+		sentencia.close();
 	}
 
 	

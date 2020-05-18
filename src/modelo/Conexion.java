@@ -1,7 +1,7 @@
 package modelo;
 
 import java.sql.*;
-import org.postgresql.*;
+//import org.postgresql.*;
 
 public class Conexion {
 

@@ -1,4 +1,4 @@
-package appEntidadFinanciera;
+package controlador;
 
 
 import java.sql.Connection;
@@ -6,13 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import modelo.Conexion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -65,7 +64,8 @@ public class ClientesControlador {
 		return false;//Si no se encuentran resultados, significa que el usuario no existe.
 	}
 	
-	public void limpiarTextFields() {		
+	public void limpiarTextFields() {
+				
 		cedulaTF.clear();
 		nombresTF.clear();
 		telefonoTF.clear();
@@ -226,6 +226,15 @@ public class ClientesControlador {
 			alerta.setTitle("Error al ingresar");
 			alerta.setHeaderText(null);
 			alerta.setContentText("Todos los datos son obligatorios. Por favor rellenar los campos vacíos.");
+			alerta.showAndWait();
+			return;
+		}
+		
+		if(validarCliente(actBuscarCedulaTF)) {
+			Alert alerta = new Alert(AlertType.ERROR);
+			alerta.setTitle("Cliente existente");
+			alerta.setHeaderText(null);
+			alerta.setContentText("La cedula ingresada ya pertenece a algún cliente registrado.");
 			alerta.showAndWait();
 			return;
 		}

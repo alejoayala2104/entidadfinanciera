@@ -10,23 +10,19 @@ public class mainEF extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		try {			
+		try {	
 			Parent root = null;
-			root = FXMLLoader.load(getClass().getResource("/appEntidadFinanciera/home.fxml"));			
+			root = FXMLLoader.load(getClass().getResource("/vista/home.fxml"));	
 			Scene scene = new Scene(root);
-			primaryStage.setScene(scene);			
+			primaryStage.setScene(scene);	
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
-	public static void main(String[] args) {		
-		//Conexion.ConexionDB();
+	public static void main(String[] args) {	
 		launch(args);
-		
-
 	}
 
 }

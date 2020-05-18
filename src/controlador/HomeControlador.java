@@ -1,4 +1,4 @@
-package appEntidadFinanciera;
+package controlador;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ public class HomeControlador {
 	@FXML
 	private void entrarClientes(ActionEvent event) throws IOException {
 		
-		Parent interfazClientes = FXMLLoader.load(getClass().getResource("/appEntidadFinanciera/clientes.fxml"));
+		Parent interfazClientes = FXMLLoader.load(getClass().getResource("/vista/clientes.fxml"));
 		Scene escenaClientes = new Scene(interfazClientes);
 		Window nodo = ((Node) event.getSource()).getScene().getWindow();
 		Stage ventana = (Stage)(nodo);

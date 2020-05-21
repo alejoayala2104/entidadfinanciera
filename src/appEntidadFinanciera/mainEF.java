@@ -9,8 +9,8 @@ import javafx.stage.Stage;
 public class mainEF extends Application {
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-	
+	public void start(Stage primaryStage) throws Exception {	
+
 			Parent root = null;
 			root = FXMLLoader.load(getClass().getResource("/vista/home.fxml"));	
 			Scene scene = new Scene(root);

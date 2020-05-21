@@ -1,0 +1,50 @@
+@font-face {
+	fx-font-family: "Lato";
+    src: url("Lato-Regular.ttf");
+}
+
+.root{
+	-fx-font-family: "Lato";	
+}
+
+.tab-pane *.tab-header-area *.tab-header-background {
+  -fx-background-color:#B1EDE8;
+  -fx-background-insets: 0 0 0 0;
+  -fx-tab-min-width:400px;
+  -fx-tab-max-width:400px;
+  -fx-tab-min-height:62px;
+  -fx-tab-max-height:62px;
+
+}
+.tab { 
+  -fx-background-color:#FFFFFF ;
+  -fx-border-style:none;
+  -fx-background-insets: 0 1 0 0;
+  -fx-background-radius: 0 0 0 0;
+  	-fx-font-size:14;
+}
+.tab:selected {
+	-fx-background-color:#E8E8E8 ;
+}
+
+
+
+
+
+.background{
+	-fx-background-color:#FFFFFF ;	
+}
+
+.label{
+	-fx-font-family: "Lato";
+		-fx-font-size:16;
+}
+.labelTitulo{
+	-fx-font-family: "Lato";
+	-fx-font-size:24;
+}
+
+.button{
+  -fx-background-color: #4B0082;
+  -fx-border-radius: 5px;
+}

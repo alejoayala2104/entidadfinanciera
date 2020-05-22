@@ -14,6 +14,8 @@ import javafx.scene.input.KeyEvent;
 import modelo.Conexion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class ClientesControlador {	 
 	
@@ -52,6 +54,11 @@ public class ClientesControlador {
 	@FXML TextField actTelefonoTF;
 	@FXML TextField actEmailTF;
 	@FXML TextField actDireccionTF;
+	
+	//Imagen empresa icono
+	@FXML
+	Image empresa_logo = new Image (getClass().getResourceAsStream("/vista/icon/empresa_logo.png"));
+	ImageView empresa_logo_view = new ImageView (empresa_logo);
 	
 	
 	public void limpiarTextFields() {

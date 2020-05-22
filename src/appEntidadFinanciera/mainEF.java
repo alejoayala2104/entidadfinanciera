@@ -1,5 +1,4 @@
 package appEntidadFinanciera;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,7 +9,7 @@ public class mainEF extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {	
-
+		
 			Parent root = null;
 			root = FXMLLoader.load(getClass().getResource("/vista/home.fxml"));	
 			Scene scene = new Scene(root);

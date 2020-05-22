@@ -28,11 +28,12 @@
 }
 
 
-
-
-
 .background{
 	-fx-background-color:#FFFFFF ;	
+}
+
+.backgroundMain{
+	-fx-background-color: #1C0030;
 }
 
 .label{
@@ -48,3 +49,17 @@
   -fx-background-color: #4B0082;
   -fx-border-radius: 5px;
 }
+
+.button:pressed{
+	-fx-background-color: #692D95;
+}
+
+.buttonMain{
+  -fx-background-color: #2D004D;	
+}
+
+.buttonMain:hover{	
+  -fx-background-color:#4B0082 ;
+}
+
+

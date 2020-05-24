@@ -242,7 +242,7 @@ public class ClientesControlador {
 		//Verifica que la cédula que está ingresando no es de algún otro cliente ya existente.
 		if(actCedulaTF.getText().equals(cedulaBuscada)==false && validarCliente(actCedulaTF)) {
 			limpiarTextFields();
-			mostrarAlerta(AlertType.ERROR, "Cliente existente", "No se puede modificar la cedula ingresada", "El cliente con dicha cédula ya existe.");
+			mostrarAlerta(AlertType.ERROR, "Cliente existente", "No se puede actualizar la cédula", "El cliente con dicha cédula ya existe.");
 			return;
 		}
 		

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="bpnTransMain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1152.0" stylesheets="@css/transacciones.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.TransControlador">
+   <left>
+      <VBox prefHeight="700.0" prefWidth="274.0" style="-fx-background-color: indigo;" BorderPane.alignment="CENTER">
+         <children>
+            <AnchorPane prefHeight="97.0" prefWidth="274.0" style="-fx-background-color: #2A1647;">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="57.0" layoutY="30.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Transacciones" textFill="WHITE" />
+               </children>
+            </AnchorPane>
+            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#entrarHome" prefHeight="50.0" style="-fx-alignment: center-left;" styleClass="buttonMenu" text="Inicio" textFill="WHITE" />
+            <VBox>
+               <children>
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#registrarTrans" prefHeight="50.0" style="-fx-alignment: center-left;" styleClass="buttonMenu" text="Registro" textFill="WHITE">
+                     <font>
+                        <Font name="Cambria" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" style="-fx-alignment: center-left;" styleClass="buttonMenu" text="Consulta" textFill="WHITE" />
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" style="-fx-alignment: center-left;" styleClass="buttonMenu" text="Actualizar" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Button>
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" style="-fx-alignment: center-left;" styleClass="buttonMenu" text="Pagos" textFill="WHITE" />
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </VBox>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <StackPane fx:id="stpCenter" prefHeight="700.0" prefWidth="878.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="regTransBienvenido" text="Bienvenido!" visible="false" />
+            <AnchorPane fx:id="regTransCedula" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="878.0" visible="false">
+               <children>
+                  <Label layoutX="164.0" layoutY="294.0" text="Cedula del cliente" />
+                  <TextField fx:id="txfRegTransCedula" layoutX="164.0" layoutY="315.0" />
+                  <Button layoutX="323.0" layoutY="315.0" mnemonicParsing="false" onAction="#regTransBuscarCliente" text="Buscar" />
+                  <Button layoutX="164.0" layoutY="413.0" mnemonicParsing="false" text="¿Cliente nuevo?" />
+                  <Label fx:id="lblClienteEncontrado" layoutX="390.0" layoutY="319.0" text="Cliente encontrado" textFill="#016b0b" visible="false" />
+                  <Label fx:id="lblNoSeEncontroCliente" layoutX="164.0" layoutY="358.0" text="No se encontró al cliente" textFill="RED" visible="false" />
+                  <Button fx:id="btnContinuarATipoTrans" layoutX="745.0" layoutY="626.0" mnemonicParsing="false" onAction="#continuarATipoTransaccion" text="Continuar" />
+                  <Label layoutX="398.0" layoutY="319.0" text="Cliente encontado" textFill="#26a104" visible="false" />
+                  <Label layoutX="164.0" layoutY="358.0" text="Cliente no encontrado" textFill="RED" visible="false" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="regTransTipo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="878.0" visible="false">
+               <children>
+                  <ComboBox fx:id="regTransCbxTipoTrans" layoutX="351.0" layoutY="325.0" prefHeight="25.0" prefWidth="176.0" />
+                  <Label layoutX="351.0" layoutY="300.0" text="Seleccione el tipo de transacción:" />
+                  <Button layoutX="765.0" layoutY="636.0" mnemonicParsing="false" onAction="#continuarASimulacion" text="Continuar" />
+                  <Button layoutX="65.0" layoutY="636.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="regTransSimulacion" prefHeight="700.0" prefWidth="878.0" visible="false">
+               <children>
+                  <Label layoutX="106.0" layoutY="96.0" text="Monto" />
+                  <Label layoutX="536.0" layoutY="96.0" text="Número de cuotas mensuales" />
+                  <Label layoutX="106.0" layoutY="225.0" text="Tasa de interés(EA)" />
+                  <Label layoutX="536.0" layoutY="225.0" text="Fecha de Iniciación" />
+                  <TextField fx:id="txfRegTransMonto" layoutX="106.0" layoutY="113.0" onKeyPressed="#validarInputNumerico" />
+                  <TextField fx:id="txfRegTransNumCuotas" layoutX="536.0" layoutY="113.0" onKeyPressed="#validarInputEntero" prefHeight="25.0" prefWidth="178.0" />
+                  <TextField fx:id="txfRegTransTasa" layoutX="106.0" layoutY="242.0" onKeyPressed="#validarInputNumerico" />
+                  <Label layoutX="106.0" layoutY="358.0" text="Simulación" />
+                  <Button layoutX="181.0" layoutY="354.0" mnemonicParsing="false" onAction="#generarSimulacion" text="Generar" />
+                  <DatePicker fx:id="dtpFechaIniciacion" editable="false" layoutX="536.0" layoutY="242.0" />
+                  <Button layoutX="784.0" layoutY="637.0" mnemonicParsing="false" onAction="#continuarASoportes" text="Continuar" />
+                  <Button layoutX="54.0" layoutY="637.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
+                  <TableView fx:id="tableSimulacion" layoutX="99.0" layoutY="425.0" prefHeight="169.0" prefWidth="681.0">
+                    <columns>
+                      <TableColumn fx:id="tableSimulacionNoCuota" prefWidth="75.0" text="No. Cuota" />
+                      <TableColumn fx:id="tableSimulacionMens" prefWidth="101.0" text="Mensualidad" />
+                        <TableColumn fx:id="tableSimulacionFPago" prefWidth="97.0" text="Fecha de pago" />
+                    </columns>
+                  </TableView>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="regTransSoportes" prefHeight="700.0" prefWidth="878.0">
+               <children>
+                  <Label layoutX="83.0" layoutY="85.0" text="Soportes de crédito">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="83.0" layoutY="167.0" text="Garantías">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="174.0" layoutY="168.0" mnemonicParsing="false" text="Nueva garantía" />
+                  <Label fx:id="lblRegTransClieSinGarantias" layoutX="83.0" layoutY="203.0" text="El cliente no tiene garantías registradas" />
+                  <HBox fx:id="hbxGarantiasAñadidas" layoutX="87.0" layoutY="484.0" spacing="10.0">
+                     <children>
+                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Agregadas:" />
+                        <Button mnemonicParsing="false" onAction="#cancelarAñadidasRegTrans" text="Cancelar" />
+                     </children>
+                  </HBox>
+                  <TextArea fx:id="taGarantiasAñadidas" layoutX="87.0" layoutY="517.0" prefHeight="90.0" prefWidth="705.0" />
+                  <VBox fx:id="vbxRegTransTablaGarantias" layoutX="83.0" layoutY="220.0" prefHeight="251.0" prefWidth="712.0" spacing="3.0">
+                     <children>
+                        <Label text="Seleccione una garantía y presione el botón añadir" />
+                        <Label text="Garantías del cliente:" />
+                        <TableView fx:id="tableRegTransGarantias" prefWidth="712.0">
+                          <columns>
+                            <TableColumn fx:id="tableRegTransGarantiasCod" prefWidth="74.0" text="Código" />
+                            <TableColumn fx:id="tableRegTransGarantiasTipo" prefWidth="155.0" text="Tipo" />
+                              <TableColumn fx:id="tableRegTransGarantiasVal" prefWidth="188.0" text="Valor" />
+                              <TableColumn fx:id="tableRegTransGarantiasUbi" prefWidth="294.0" text="Ubicación" />
+                          </columns>
+                        </TableView>
+                        <Button mnemonicParsing="false" onAction="#añadirGarantiaRegTrans" text="Añadir" />
+                     </children>
+                  </VBox>
+                  <Button layoutX="769.0" layoutY="635.0" mnemonicParsing="false" text="Continuar" />
+                  <Button layoutX="83.0" layoutY="635.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="regTransSoportesFiador" prefHeight="700.0" prefWidth="878.0" visible="false">
+               <children>
+                  <Label layoutX="76.0" layoutY="230.0" text="Fiador">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="74.0" layoutY="266.0" text="Cédula del fiador" />
+                  <TextField fx:id="txfRegTransFiador" layoutX="76.0" layoutY="289.0" />
+                  <Label layoutX="76.0" layoutY="93.0" text="Soportes de crédito">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="237.0" layoutY="289.0" mnemonicParsing="false" text="Buscar" />
+                  <Button layoutX="68.0" layoutY="639.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
+               </children>
+            </AnchorPane>
+         </children>
+      </StackPane>
+   </center>
+</BorderPane>

@@ -1,0 +1,15 @@
+
+.buttonMenu{
+	-fx-font-color:white;
+	-fx-font-size: 20;
+	-fx-background-color:#401C72;
+}
+
+.buttonMenu:hover{
+	-fx-background-color:#541BA4;
+}
+
+
+
+
+

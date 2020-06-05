@@ -119,7 +119,7 @@ public class ClientesControlador {
 	}
 	
 	//Método que fuerza a los campos de cédula y teléfono a solo recibir entradas numéricas.
-	//También hace que no se pueda digitar del número 0 de primero.
+	//También hace que no se pueda digitar del número 0 de primero.		
 	@FXML
 	public void validarInputNumerico(KeyEvent event) {
 		try {
@@ -156,7 +156,7 @@ public class ClientesControlador {
 		
 		//Alerta de registro exitoso.
 		mostrarAlerta(AlertType.INFORMATION, "Registro creado", "Cliente registrado con éxito", null);
-		
+		limpiarTextFields();
 		//Se cierra el ResultSet y el Statement
 		rs.close();
 		sentencia.close();
@@ -253,7 +253,7 @@ public class ClientesControlador {
 		
 		//Mostrar mensaje de éxito.
 		mostrarAlerta(AlertType.INFORMATION, "Registro actualizado", "Cambios guardados con éxito", null);
-		
+		limpiarTextFields();
 		//Se cierra la sentencia.
 		sentencia.close();
 	}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="878.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.TransControlador">
+   <children>
+      <Label layoutX="164.0" layoutY="294.0" text="Cedula del cliente" />
+      <TextField layoutX="164.0" layoutY="315.0" />
+      <Button layoutX="323.0" layoutY="315.0" mnemonicParsing="false" text="Buscar" />
+      <Button layoutX="164.0" layoutY="413.0" mnemonicParsing="false" text="¿Cliente nuevo?" />
+      <Button layoutX="746.0" layoutY="639.0" mnemonicParsing="false" onAction="#continuarATipoTransaccion" text="Continuar" />
+      <Label layoutX="390.0" layoutY="319.0" text="Cliente encontrado" textFill="#016b0b" visible="false" />
+      <Label layoutX="164.0" layoutY="358.0" text="No se encontró al cliente" textFill="RED" visible="false" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="360.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.NuevaGarantiaControlador">
+   <children>
+      <Label layoutX="56.0" layoutY="57.0" text="Nueva garantía">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Label layoutX="56.0" layoutY="151.0" text="Tipo de garantía">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="cbxTipoNuevaGarantia" layoutX="56.0" layoutY="182.0" prefHeight="40.0" prefWidth="250.0" />
+      <Label layoutX="56.0" layoutY="252.0" text="Valor">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="56.0" layoutY="353.0" text="Ubicación">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txfValorNuevaGarantia" layoutX="57.0" layoutY="279.0" prefHeight="40.0" prefWidth="250.0" />
+      <TextField fx:id="txfUbiNuevaGarantia" layoutX="57.0" layoutY="380.0" prefHeight="40.0" prefWidth="250.0" />
+      <Button layoutX="46.0" layoutY="454.0" mnemonicParsing="false" onAction="#guardarNuevaGarantia" prefHeight="40.0" prefWidth="120.0" text="Guardar" />
+      <Button layoutX="186.0" layoutY="454.0" mnemonicParsing="false" onAction="#cancelarNuevaGarantia" prefHeight="40.0" prefWidth="120.0" text="Cancelar" />
+   </children>
+</AnchorPane>

@@ -44,6 +44,15 @@ public class ControladorGeneral {
 		return resultSet;
 	}
 	
+	public void ejecutarSentenciaInsert(String sentenciaSQL) {		
+		try {
+			sentencia = cn.createStatement();
+			sentencia.execute(sentenciaSQL);
+		} catch (SQLException e) {
+			System.out.println("No se pudo ejecutar la sentencia en la base de datos.");
+		}
+	}
+	
 	//Verifica si un cliente existe o no.
 	public boolean validarCliente(TextField tf) throws SQLException {
 

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -136,14 +137,15 @@ public class TransControlador implements Initializable {
     ObservableList<Garantia> listaGarantias;
     ArrayList<Garantia> listaGarantiasAñadidas = new ArrayList<Garantia>();
     StringBuilder contenidotaGarantiasAñadidas = new StringBuilder("");
+  
+    
     
     //Registrar transacción : Soportes - Fiador  
     @FXML
     private AnchorPane regTransSoportesFiador; 
     @FXML
-    private TextField txfRegTransFiador;
-    
- 
+    private TextField txfRegTransFiador;         
+   
 	@FXML    
     public void entrarHome(ActionEvent event) throws IOException {
     	Parent home = FXMLLoader.load(getClass().getResource("/vista/home.fxml"));
@@ -205,6 +207,7 @@ public class TransControlador implements Initializable {
     			|| txfRegTransTasa.getText().isEmpty() |dtpFechaIniciacion.getValue() == null) {
     		controlGeneral.mostrarAlerta(AlertType.ERROR, "Campos vacíos", "Por favor rellene todos los campos", null);
     		return;
+    		
     	}
     	
     	//Fórmula de la anualidad para calcular la mensualidad.
@@ -260,6 +263,22 @@ public class TransControlador implements Initializable {
 		hbxGarantiasAñadidas.setVisible(false);
 		lblRegTransClieSinGarantias.setVisible(true);
 		
+		mostrarGarantiasRegTrans();
+    	
+    	//Agregar valores al objeto transacción.
+    	objTransaccion.setMontoTrans(monto);
+    	objTransaccion.setTasaTrans(tasaEA);
+    	objTransaccion.setNumCuotas(numCuotas);
+    	objTransaccion.setFechaIniciacion(fechaIniciacion);
+    	//La fecha de término se cumple cuando se pagan todas las cuotas.
+    	fechaTermino = fechaIniciacion.plusMonths(numCuotas);
+    	objTransaccion.setFechaTermino(fechaTermino);
+    	objTransaccion.setFechaSolicitud(LocalDate.now());
+    	objTransaccion.setEstadoSolicitud("INCOMPLETA");   
+
+    } 
+    
+    public void mostrarGarantiasRegTrans() {
     	//Consultar si el cliente asociado tiene garantías.
     	String secuenciaSQL = "SELECT  garantias.* FROM garantias JOIN cliente ON clientegarantia=cedula WHERE cedula like '"
     	+ objTransaccion.getClienteTrans()+"';";
@@ -286,30 +305,16 @@ public class TransControlador implements Initializable {
 	    			//Buscar garantías retorna un ObservableList<> con las garantías del usuario.
 	    			listaGarantias = buscarGarantias(objTransaccion.getClienteTrans());
 	    			//Se agrega esa lista de garantías a la tabla.
-	    			tableRegTransGarantias.setItems(listaGarantias);
+	    			tableRegTransGarantias.setItems(listaGarantias);	    			
         	}
     		}catch(Exception e) {
     			System.out.println(e.getLocalizedMessage());
-    		}
-    		
+    		}    		
     			
     		//Muestra el pane de Soportes.
     		esconderPanesMenosIndicado(regTransSoportes);
     	}
-    	
-    	//Agregar valores al objeto transacción.
-    	objTransaccion.setMontoTrans(monto);
-    	objTransaccion.setTasaTrans(tasaEA);
-    	objTransaccion.setNumCuotas(numCuotas);
-    	objTransaccion.setFechaIniciacion(fechaIniciacion);
-    	//La fecha de término se cumple cuando se pagan todas las cuotas.
-    	fechaTermino = fechaIniciacion.plusMonths(numCuotas);
-    	objTransaccion.setFechaTermino(fechaTermino);
-    	objTransaccion.setFechaSolicitud(LocalDate.now());
-    	objTransaccion.setEstadoSolicitud("INCOMPLETA");   
-
     }
-    
     
     public ObservableList<Garantia> buscarGarantias(String clienteGarantiaRS) throws SQLException{
     	
@@ -328,10 +333,14 @@ public class TransControlador implements Initializable {
     	}
     	return listaGar;
     }
-    
 
     @FXML
-    void añadirGarantiaRegTrans(ActionEvent event) {
+    public void añadirGarantiaRegTrans(ActionEvent event) {
+    	
+    	if(tableRegTransGarantias.getSelectionModel().isEmpty()) {
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "Garantía inválida", "Garantía no seleccionada", "Por favor seleccione una garantía.");
+    		return;
+    	}
     	
     	Garantia garantiaAñadida = new Garantia();
     	garantiaAñadida = tableRegTransGarantias.getSelectionModel().getSelectedItem();
@@ -344,9 +353,50 @@ public class TransControlador implements Initializable {
     }
 
     @FXML
-    void cancelarAñadidasRegTrans(ActionEvent event) {
+    public void cancelarAñadidasRegTrans(ActionEvent event) {
     	listaGarantiasAñadidas = new ArrayList<>();
     	taGarantiasAñadidas.clear(); 	
+    }
+    
+    
+    @FXML
+    public void nuevaGarantiaRegTrans(ActionEvent event) throws IOException {
+
+    	//Se carga el FXML Nueva Garantía.
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/nuevaGarantia.fxml"));
+    	Parent interfazNuevaGarantia = loader.load();
+		//Se crea un objeto del constructor NuevaGarantiaControlador y se le carga el controlador del fxml cargado anteriormente.
+    	NuevaGarantiaControlador nuevaGarantiaControlador = loader.getController();
+    	//Se ejecuta el método de cambio de cédula del controlador NuevaGarantía.
+    	nuevaGarantiaControlador.setClienteNuevaGarantia(objTransaccion.getClienteTrans());
+    	
+    	Scene escenaNuevaGarantia = new Scene(interfazNuevaGarantia);	
+		Stage ventanaNuevaGarantia = new Stage();
+		ventanaNuevaGarantia.setScene(escenaNuevaGarantia);
+		ventanaNuevaGarantia.setTitle("Nueva garantía");
+		ventanaNuevaGarantia.show();
+
+    }
+    
+    @FXML
+    public void refrescarTableRegTransGarantias(ActionEvent event) throws SQLException {
+    	
+    	mostrarGarantiasRegTrans();
+    	//Refresh table
+//    	//Quito las columnas.
+//    	tableRegTransGarantias.getColumns().clear();    
+//    	tableRegTransGarantias.getColumns().add(tableRegTransGarantiasCod);
+//    	tableRegTransGarantias.getColumns().add(tableRegTransGarantiasTipo);
+//    	tableRegTransGarantias.getColumns().add(tableRegTransGarantiasVal);
+//    	tableRegTransGarantias.getColumns().add(tableRegTransGarantiasUbi);    	 
+//    	listaGarantias = buscarGarantias(objTransaccion.getClienteTrans());
+//		//Se agrega esa lista de garantías a la tabla.
+//		tableRegTransGarantias.setItems(listaGarantias);
+    }    
+    
+    @FXML
+    public void continuarAFiadorRegTrans(ActionEvent event) throws SQLException {
+
     }
     
     @FXML

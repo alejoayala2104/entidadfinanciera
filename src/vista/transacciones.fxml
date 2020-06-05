@@ -107,7 +107,7 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Button layoutX="174.0" layoutY="168.0" mnemonicParsing="false" text="Nueva garantía" />
+                  <Button layoutX="174.0" layoutY="168.0" mnemonicParsing="false" onAction="#nuevaGarantiaRegTrans" text="Nueva garantía" />
                   <Label fx:id="lblRegTransClieSinGarantias" layoutX="83.0" layoutY="203.0" text="El cliente no tiene garantías registradas" />
                   <HBox fx:id="hbxGarantiasAñadidas" layoutX="87.0" layoutY="484.0" spacing="10.0">
                      <children>
@@ -133,6 +133,7 @@
                   </VBox>
                   <Button layoutX="769.0" layoutY="635.0" mnemonicParsing="false" text="Continuar" />
                   <Button layoutX="83.0" layoutY="635.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
+                  <Button layoutX="281.0" layoutY="169.0" mnemonicParsing="false" onAction="#refrescarTableRegTransGarantias" text="Refrescar" />
                </children>
             </AnchorPane>
             <AnchorPane fx:id="regTransSoportesFiador" prefHeight="700.0" prefWidth="878.0" visible="false">

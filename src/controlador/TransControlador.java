@@ -61,7 +61,6 @@ public class TransControlador implements Initializable {
 	ResultSet clienteRegistro;
 	
 	//Banderas
-    private boolean cedulaOK = false;
     private boolean fiadorOK = false;
     
 	//Main Transacciones
@@ -76,13 +75,7 @@ public class TransControlador implements Initializable {
     @FXML
     private AnchorPane regTransCedula;
     @FXML
-    private Label lblClienteEncontrado;
-    @FXML
-    private Label lblNoSeEncontroCliente;
-    @FXML
-    private TextField txfRegTransCedula;    
-
-    
+    private TextField txfRegTransCedula;   
     
     
     //Registrar transacción: Tipo de transacción
@@ -161,33 +154,19 @@ public class TransControlador implements Initializable {
     public void registrarTrans(ActionEvent event) throws IOException {    	
     	esconderPanesMenosIndicado(regTransCedula);
     } 
-    
-    
-    @FXML
-    public void regTransBuscarCliente() throws SQLException{
-    	//Busca el cliente
-    	clienteRegistro = controlGeneral.ejecutarSentencia("SELECT * from cliente WHERE cedula like '" + txfRegTransCedula.getText() +"';");
-    	if(clienteRegistro.next()) {
-    		cedulaCliente = clienteRegistro.getString("cedula");
-    		cedulaOK=true;
-    		lblNoSeEncontroCliente.setVisible(false);
-    		lblClienteEncontrado.setVisible(true);    	
-    		objTransaccion.setClienteTrans(cedulaCliente);
-    	}
-    	else {
-    		cedulaOK=false;    		
-    		lblClienteEncontrado.setVisible(false);
-    		lblNoSeEncontroCliente.setVisible(true);
-    	}
-    }
 
     @FXML
-    public void continuarATipoTransaccion(ActionEvent event) throws IOException {
-    	if(cedulaOK) {
+    public void continuarATipoTransaccion(ActionEvent event) throws IOException, SQLException {
+    	
+    	clienteRegistro = controlGeneral.ejecutarSentencia("SELECT * from cliente WHERE cedula like '" + txfRegTransCedula.getText() +"';");
+    	if(clienteRegistro.next()) {
+    		cedulaCliente = clienteRegistro.getString("cedula");    		 		 	
+    		objTransaccion.setClienteTrans(cedulaCliente);
     		esconderPanesMenosIndicado(regTransTipo);
     	}
-    	else
-    		controlGeneral.mostrarAlerta(AlertType.ERROR, "Cédula incorrecta", "Cliente no asociado", "Por favor ingrese una cédula válida.");
+    	else {
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "Cédula incorrecta", "Cliente no encontrado", "No se encontraron registros del cliente en el sistema.");
+    	}
     }
     
     @FXML
@@ -482,6 +461,17 @@ public class TransControlador implements Initializable {
 				e.getStackTrace();
 		}
 	}
+	
+	@FXML
+  	public void validarInputEnteroSinLimite(KeyEvent event) {
+  		try {
+  			TextField textfield = (TextField) event.getSource();
+  			textfield.setTextFormatter(new TextFormatter<>(change ->
+  	        (change.getControlNewText().matches("^[0-9]{0,20}$")) ? change : null));
+  			}catch(Exception e) {
+  				e.getStackTrace();
+  		}
+  	}
 	
 	
 	public void esconderPanesMenosIndicado(Node nodo) {

@@ -10,9 +10,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -75,10 +77,32 @@ public class NuevaGarantiaControlador {
     	cancelarNuevaGarantia(event);    	
     	
     }
+    
+    @FXML
+	public void validarInputEntero(KeyEvent event) {
+		try {
+			TextField textfield = (TextField) event.getSource();
+			textfield.setTextFormatter(new TextFormatter<>(change ->
+	        (change.getControlNewText().matches("^[0-9]{0,3}$")) ? change : null));
+			}catch(Exception e) {
+				e.getStackTrace();
+		}
+	}
+    
+    @FXML
+  	public void validarInputEnteroSinLimite(KeyEvent event) {
+  		try {
+  			TextField textfield = (TextField) event.getSource();
+  			textfield.setTextFormatter(new TextFormatter<>(change ->
+  	        (change.getControlNewText().matches("^[0-9]{0,20}$")) ? change : null));
+  			}catch(Exception e) {
+  				e.getStackTrace();
+  		}
+  	}
 
     @FXML
     public void initialize() {
+    	cbxTipoNuevaGarantia.setPromptText("Seleccione un tipo");
         cbxTipoNuevaGarantia.getItems().addAll("Automóvil","Inmueble","Otro");
-
     }
 }

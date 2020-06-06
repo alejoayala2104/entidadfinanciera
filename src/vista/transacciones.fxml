@@ -54,14 +54,9 @@
             <AnchorPane fx:id="regTransCedula" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="878.0" visible="false">
                <children>
                   <Label layoutX="164.0" layoutY="294.0" text="Cedula del cliente" />
-                  <TextField fx:id="txfRegTransCedula" layoutX="164.0" layoutY="315.0" />
-                  <Button layoutX="323.0" layoutY="315.0" mnemonicParsing="false" onAction="#regTransBuscarCliente" text="Buscar" />
-                  <Button layoutX="164.0" layoutY="413.0" mnemonicParsing="false" text="¿Cliente nuevo?" />
-                  <Label fx:id="lblClienteEncontrado" layoutX="390.0" layoutY="319.0" text="Cliente encontrado" textFill="#016b0b" visible="false" />
-                  <Label fx:id="lblNoSeEncontroCliente" layoutX="164.0" layoutY="358.0" text="No se encontró al cliente" textFill="RED" visible="false" />
+                  <TextField fx:id="txfRegTransCedula" layoutX="164.0" layoutY="315.0" onKeyPressed="#validarInputEnteroSinLimite" />
+                  <Button layoutX="162.0" layoutY="357.0" mnemonicParsing="false" text="¿Cliente nuevo?" visible="false" />
                   <Button fx:id="btnContinuarATipoTrans" layoutX="745.0" layoutY="626.0" mnemonicParsing="false" onAction="#continuarATipoTransaccion" text="Continuar" />
-                  <Label layoutX="398.0" layoutY="319.0" text="Cliente encontado" textFill="#26a104" visible="false" />
-                  <Label layoutX="164.0" layoutY="358.0" text="Cliente no encontrado" textFill="RED" visible="false" />
                </children>
             </AnchorPane>
             <AnchorPane fx:id="regTransTipo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="878.0" visible="false">
@@ -115,7 +110,7 @@
                         <Button mnemonicParsing="false" onAction="#cancelarAñadidasRegTrans" text="Cancelar" />
                      </children>
                   </HBox>
-                  <TextArea fx:id="taGarantiasAñadidas" layoutX="87.0" layoutY="517.0" prefHeight="90.0" prefWidth="705.0" />
+                  <TextArea fx:id="taGarantiasAñadidas" editable="false" layoutX="87.0" layoutY="517.0" prefHeight="90.0" prefWidth="705.0" />
                   <VBox fx:id="vbxRegTransTablaGarantias" layoutX="83.0" layoutY="220.0" prefHeight="251.0" prefWidth="712.0" spacing="3.0">
                      <children>
                         <Label text="Seleccione una garantía y presione el botón añadir" />
@@ -136,7 +131,7 @@
                   <Button layoutX="281.0" layoutY="169.0" mnemonicParsing="false" onAction="#refrescarTableRegTransGarantias" text="Refrescar" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="regTransSoportesFiador" prefHeight="700.0" prefWidth="878.0">
+            <AnchorPane fx:id="regTransSoportesFiador" prefHeight="700.0" prefWidth="878.0" visible="false">
                <children>
                   <Label layoutX="76.0" layoutY="230.0" text="Fiador">
                      <font>
@@ -144,7 +139,7 @@
                      </font>
                   </Label>
                   <Label layoutX="74.0" layoutY="266.0" text="Cédula del fiador" />
-                  <TextField fx:id="txfRegTransFiador" layoutX="76.0" layoutY="289.0" />
+                  <TextField fx:id="txfRegTransFiador" layoutX="76.0" layoutY="289.0" onKeyPressed="#validarInputEnteroSinLimite" />
                   <Label layoutX="76.0" layoutY="93.0" text="Soportes de crédito">
                      <font>
                         <Font size="26.0" />

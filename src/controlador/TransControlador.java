@@ -53,7 +53,7 @@ public class TransControlador implements Initializable {
 	Transaccion objTransaccion = new Transaccion();
 	
 	//Generales	
-	String cedulaCliente,tipoTrans;
+	String cedulaCliente,tipoTrans,cedulaFiador;
 	double monto,tasaEA,mensualidad;
 	int numCuotas;
 	LocalDate fechaIniciacion,fechaTermino,fechaSolicitud;
@@ -62,6 +62,7 @@ public class TransControlador implements Initializable {
 	
 	//Banderas
     private boolean cedulaOK = false;
+    private boolean fiadorOK = false;
     
 	//Main Transacciones
     @FXML
@@ -137,7 +138,7 @@ public class TransControlador implements Initializable {
     ObservableList<Garantia> listaGarantias;
     ArrayList<Garantia> listaGarantiasAñadidas = new ArrayList<Garantia>();
     StringBuilder contenidotaGarantiasAñadidas = new StringBuilder("");
-  
+    List<Garantias_Prestamo> listaGarantiasPrestamo = new ArrayList<>();  
     
     
     //Registrar transacción : Soportes - Fiador  
@@ -262,6 +263,8 @@ public class TransControlador implements Initializable {
 		taGarantiasAñadidas.setVisible(false);
 		hbxGarantiasAñadidas.setVisible(false);
 		lblRegTransClieSinGarantias.setVisible(true);
+		//Para limpiar el TextArea
+		cancelarAñadidasRegTrans(event);
 		
 		mostrarGarantiasRegTrans();
     	
@@ -274,7 +277,7 @@ public class TransControlador implements Initializable {
     	fechaTermino = fechaIniciacion.plusMonths(numCuotas);
     	objTransaccion.setFechaTermino(fechaTermino);
     	objTransaccion.setFechaSolicitud(LocalDate.now());
-    	objTransaccion.setEstadoSolicitud("INCOMPLETA");   
+    	objTransaccion.setEstadoSolicitud("INCOMPLETA");
 
     } 
     
@@ -379,26 +382,85 @@ public class TransControlador implements Initializable {
     }
     
     @FXML
-    public void refrescarTableRegTransGarantias(ActionEvent event) throws SQLException {
-    	
+    public void refrescarTableRegTransGarantias(ActionEvent event) throws SQLException {    	
     	mostrarGarantiasRegTrans();
-    	//Refresh table
-//    	//Quito las columnas.
-//    	tableRegTransGarantias.getColumns().clear();    
-//    	tableRegTransGarantias.getColumns().add(tableRegTransGarantiasCod);
-//    	tableRegTransGarantias.getColumns().add(tableRegTransGarantiasTipo);
-//    	tableRegTransGarantias.getColumns().add(tableRegTransGarantiasVal);
-//    	tableRegTransGarantias.getColumns().add(tableRegTransGarantiasUbi);    	 
-//    	listaGarantias = buscarGarantias(objTransaccion.getClienteTrans());
-//		//Se agrega esa lista de garantías a la tabla.
-//		tableRegTransGarantias.setItems(listaGarantias);
     }    
     
     @FXML
-    public void continuarAFiadorRegTrans(ActionEvent event) throws SQLException {
-
+    public void continuarAFiadorRegTrans(ActionEvent event) throws SQLException {    	
+    	
+    	if(listaGarantiasAñadidas.isEmpty()) {
+    		controlGeneral.mostrarAlerta(AlertType.INFORMATION, "Garantías pendientes", "No se añadieron garantías", "El estado de la solicitud será INCOMPLETA.");
+    		objTransaccion.setEstadoSolicitud("INCOMPLETA");
+    	}
+    	esconderPanesMenosIndicado(regTransSoportesFiador);    	
     }
     
+    @FXML
+    public void finalizarRegTransPrestamo(ActionEvent event) throws SQLException {
+
+    	if(txfRegTransFiador.getText().isEmpty()) {
+    		controlGeneral.mostrarAlerta(AlertType.INFORMATION, "Fiador pendiente", "Fiador no asociado", "Fiador pendiente: El estado de la solicitud será INCOMPLETA.");
+    		objTransaccion.setEstadoSolicitud("INCOMPLETA");
+    		cedulaFiador = null;
+    	}
+    	else if(txfRegTransFiador.getText().equals(objTransaccion.getClienteTrans())){
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "Fiador inválido", "Fiador inválido", "El cliente solicitante no puede ser fiador de sí mismo.");
+    		return;
+    	}
+    	else {
+    		fiadorOK = controlGeneral.validarCliente(txfRegTransFiador);
+    		if(fiadorOK==false) {
+    			controlGeneral.mostrarAlerta(AlertType.ERROR, "Fiador inválido", "Fiador no encontrado", "Si no se ingresará fiador, por favor deje la casilla vacía.");
+    			return;
+    		}
+    		else{
+    			cedulaFiador=txfRegTransFiador.getText();
+    			objPrestamo.setFiador(cedulaFiador);
+    			controlGeneral.mostrarAlertaSinContent(AlertType.INFORMATION, "Fiador asociado", "Fiador definido correctamete");
+    		}
+    	}
+    	
+    	if(!(listaGarantiasAñadidas.isEmpty()) && fiadorOK)
+    		objTransaccion.setEstadoSolicitud("PENDIENTE");
+
+    	
+     	//Inserta la transacción en la base de datos y obtiene la primary key generada.
+    	String insertarTrans = "INSERT INTO transacciones(clienteTrans,tipoTrans,montoTrans,tasaTrans,numCuotas,fechaSolicitud,\r\n" + 
+    			"						  fechaAprobacion,fechaIniciacion,fechaTermino,estadoSolicitud)\r\n" + 
+    			"						  VALUES('"+objTransaccion.getClienteTrans()+"','"+objTransaccion.getTipoTrans()+"',"+objTransaccion.getMontoTrans()+
+    			","+objTransaccion.getTasaTrans()+","+objTransaccion.getNumCuotas()+",'"+objTransaccion.getFechaSolicitud()+"',"+
+    			objTransaccion.getFechaAprobacion()+",'"+objTransaccion.getFechaIniciacion()+"','"+objTransaccion.getFechaTermino()+"','"+
+    			objTransaccion.getEstadoSolicitud()+"')  RETURNING codTrans;";   	   
+    	ResultSet codTransGenerado = controlGeneral.ejecutarSentencia(insertarTrans);    	
+    	if(codTransGenerado.next()) {
+    		objTransaccion.setCodTrans(codTransGenerado.getInt("codtrans"));
+    		objPrestamo.setCodPrestamo(objTransaccion.getCodTrans());
+    	}
+    	
+    	String insertarPrestamo = "";
+    	if(objPrestamo.getFiador()!=null) {
+    		insertarPrestamo = "INSERT INTO prestamos VALUES ("+objPrestamo.getCodPrestamo()+",'"+objPrestamo.getFiador()+"');";    		
+    	}
+    	else {
+    		insertarPrestamo = "INSERT INTO prestamos(codPrestamo) VALUES ("+objPrestamo.getCodPrestamo()+");";
+    	}
+    	controlGeneral.ejecutarSentenciaInsert(insertarPrestamo);    	
+    	
+    	String insertarGarPrest = "";
+    	if(!(listaGarantiasAñadidas.isEmpty())) {
+    		for(Garantia gar : listaGarantiasAñadidas) {
+    			insertarGarPrest = "INSERT INTO garantias_prestamo VALUES("+gar.getCodGarantia()+","+objPrestamo.getCodPrestamo()+");";
+    			controlGeneral.ejecutarSentenciaInsert(insertarGarPrest);
+    		}
+    		controlGeneral.mostrarAlerta(AlertType.INFORMATION, "Garantias añadidas", "Garantías asociadas al préstamo exitosamente.", null);
+    	}
+    	
+    	esconderPanesMenosIndicado(regTransBienvenido);
+    }
+    
+    
+    //Metodos generales.
     @FXML
 	public void validarInputNumerico(KeyEvent event) {
 		try {

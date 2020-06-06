@@ -95,7 +95,7 @@
                   </TableView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="regTransSoportes" prefHeight="700.0" prefWidth="878.0">
+            <AnchorPane fx:id="regTransSoportes" prefHeight="700.0" prefWidth="878.0" visible="false">
                <children>
                   <Label layoutX="83.0" layoutY="85.0" text="Soportes de crédito">
                      <font>
@@ -131,12 +131,12 @@
                         <Button mnemonicParsing="false" onAction="#añadirGarantiaRegTrans" text="Añadir" />
                      </children>
                   </VBox>
-                  <Button layoutX="769.0" layoutY="635.0" mnemonicParsing="false" text="Continuar" />
+                  <Button layoutX="769.0" layoutY="635.0" mnemonicParsing="false" onAction="#continuarAFiadorRegTrans" text="Continuar" />
                   <Button layoutX="83.0" layoutY="635.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
                   <Button layoutX="281.0" layoutY="169.0" mnemonicParsing="false" onAction="#refrescarTableRegTransGarantias" text="Refrescar" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="regTransSoportesFiador" prefHeight="700.0" prefWidth="878.0" visible="false">
+            <AnchorPane fx:id="regTransSoportesFiador" prefHeight="700.0" prefWidth="878.0">
                <children>
                   <Label layoutX="76.0" layoutY="230.0" text="Fiador">
                      <font>
@@ -152,6 +152,7 @@
                   </Label>
                   <Button layoutX="237.0" layoutY="289.0" mnemonicParsing="false" text="Buscar" />
                   <Button layoutX="68.0" layoutY="639.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
+                  <Button layoutX="760.0" layoutY="639.0" mnemonicParsing="false" onAction="#finalizarRegTransPrestamo" text="Button" />
                </children>
             </AnchorPane>
          </children>

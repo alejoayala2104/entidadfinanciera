@@ -129,16 +129,37 @@ public class TransControlador implements Initializable {
     @FXML
     private TextArea taGarantiasAñadidas;
     ObservableList<Garantia> listaGarantias;
-    ArrayList<Garantia> listaGarantiasAñadidas = new ArrayList<Garantia>();
-    StringBuilder contenidotaGarantiasAñadidas = new StringBuilder("");
-    List<Garantias_Prestamo> listaGarantiasPrestamo = new ArrayList<>();  
-    
+    ArrayList<Garantia> listaGarantiasAñadidas = new ArrayList<Garantia>();     
+      
     
     //Registrar transacción : Soportes - Fiador  
     @FXML
     private AnchorPane regTransSoportesFiador; 
     @FXML
-    private TextField txfRegTransFiador;         
+    private TextField txfRegTransFiador;        
+    
+   //Registrar transacción: Información de Pago Inversión
+    @FXML
+    private AnchorPane regTransInfoPago;
+    @FXML
+    private Label lblRegTransClienteSinCuentas;
+    @FXML
+    private VBox vbxRegTransInfoPago;
+    @FXML
+    private TableView<CuentaBancaria> tableRegTransCuentasBanc;
+    @FXML
+    private TableColumn<CuentaBancaria, String> tableColumnRegTransCuentasBancNumCuenta;
+    @FXML
+    private TableColumn<CuentaBancaria, String> tableColumnRegTransCuentasBancBanco;
+    @FXML
+    private TableColumn<CuentaBancaria, Character> tableColumnRegTransCuentasBancTipo;
+    @FXML
+    private TextField txfRegTransCuentaAsociada;      
+    ObservableList<CuentaBancaria> listaCuentasBancarias;
+    CuentaBancaria cuentaBancariaAsociada = new CuentaBancaria();
+    
+        
+        
    
 	@FXML    
     public void entrarHome(ActionEvent event) throws IOException {
@@ -149,6 +170,8 @@ public class TransControlador implements Initializable {
 		ventana.setScene(homeScene);
 		ventana.show();
     }
+		
+	
     
     @FXML
     public void registrarTrans(ActionEvent event) throws IOException {    	
@@ -168,15 +191,16 @@ public class TransControlador implements Initializable {
     		controlGeneral.mostrarAlerta(AlertType.ERROR, "Cédula incorrecta", "Cliente no encontrado", "No se encontraron registros del cliente en el sistema.");
     	}
     }
-    
+
     @FXML
     public void continuarASimulacion(ActionEvent event) {
     	//Guarda el tipo de transacción en el objeto.
-    	if(regTransCbxTipoTrans.getValue().equals("Inversión"))
-			objTransaccion.setTipoTrans('I');
-		else
-			objTransaccion.setTipoTrans('P');
-    	
+    	if(regTransCbxTipoTrans.getValue().equals("Inversión")) {
+			objTransaccion.setTipoTrans('I');			
+    	}
+		else {
+			objTransaccion.setTipoTrans('P');			
+		}
     	esconderPanesMenosIndicado(regTransSimulacion);
     }
     
@@ -186,8 +210,7 @@ public class TransControlador implements Initializable {
     	if(txfRegTransMonto.getText().isEmpty() || txfRegTransNumCuotas.getText().isEmpty()
     			|| txfRegTransTasa.getText().isEmpty() |dtpFechaIniciacion.getValue() == null) {
     		controlGeneral.mostrarAlerta(AlertType.ERROR, "Campos vacíos", "Por favor rellene todos los campos", null);
-    		return;
-    		
+    		return;    		
     	}
     	
     	//Fórmula de la anualidad para calcular la mensualidad.
@@ -202,7 +225,12 @@ public class TransControlador implements Initializable {
     	}
     	
     	double tasaMensual = (Math.pow(tasaEA+1, 1.0/12.0)) - 1.0;
-    	this.mensualidad= (tasaMensual*monto)/(1.0 - (Math.pow((1+tasaMensual),-numCuotas)));        	
+    	
+    	if(objTransaccion.getTipoTrans()=='I') {
+    		this.mensualidad = monto * ((Math.pow(1+(tasaMensual/100.0), numCuotas))-1);
+    	}else {
+    		this.mensualidad= (tasaMensual*monto)/(1.0 - (Math.pow((1+tasaMensual),-numCuotas)));
+    	}    	
     	
     	this.fechaIniciacion = dtpFechaIniciacion.getValue();        	
     	
@@ -223,7 +251,7 @@ public class TransControlador implements Initializable {
     	
     }
     
-    
+        
     @FXML
     public void continuarASoportes(ActionEvent event) throws SQLException {
     	
@@ -237,15 +265,25 @@ public class TransControlador implements Initializable {
     	//A partir de este método se obtiene la mensualidad de las cuotas.
     	generarSimulacion(event);
     	
-    	//Por defecto, el usuario no tiene garantías entonces se esconden los Panes y se muestra el label de no garantías.
-    	vbxRegTransTablaGarantias.setVisible(false);
-		taGarantiasAñadidas.setVisible(false);
-		hbxGarantiasAñadidas.setVisible(false);
-		lblRegTransClieSinGarantias.setVisible(true);
-		//Para limpiar el TextArea
-		cancelarAñadidasRegTrans(event);
-		
-		mostrarGarantiasRegTrans();
+    	if(objTransaccion.getTipoTrans()=='I') {
+    		//Por defecto, el cliente no tiene cuentas bancarias, entonces se esconden antes de hacer la búsqueda.
+    		vbxRegTransInfoPago.setVisible(false);
+    		lblRegTransClienteSinCuentas.setVisible(true);
+    		
+    		//Mostrar las cuentas bancarias
+    		mostrarCuentasBancarias();
+    	}
+    	else {
+    		//Por defecto, el cliente no tiene garantías entonces se esconden los Panes y se muestra el label de no garantías.
+        	vbxRegTransTablaGarantias.setVisible(false);
+    		taGarantiasAñadidas.setVisible(false);
+    		hbxGarantiasAñadidas.setVisible(false);
+    		lblRegTransClieSinGarantias.setVisible(true);
+    		//Para limpiar el TextArea
+    		cancelarAñadidasRegTrans(event);
+    		//Se muestra la tabla de garantías
+    		mostrarGarantiasRegTrans();
+    	}
     	
     	//Agregar valores al objeto transacción.
     	objTransaccion.setMontoTrans(monto);
@@ -258,54 +296,83 @@ public class TransControlador implements Initializable {
     	objTransaccion.setFechaSolicitud(LocalDate.now());
     	objTransaccion.setEstadoSolicitud("INCOMPLETA");
 
-    } 
+    }
+    
+    public void mostrarCuentasBancarias() {
+    	String buscarCuentasBanc = "SELECT cuentasbancarias.* FROM cliente join cuentasbancarias ON"
+    			+ " clientecuenta=cedula where cedula like '"+objTransaccion.getClienteTrans()+"';";
+    	ResultSet cuentasBancarias = controlGeneral.ejecutarSentencia(buscarCuentasBanc);
+    	
+    	try {
+    		if(cuentasBancarias.next()) {
+    			//Se muestra el Vbox de las cuentas disponibles, y se esconde el mensaje de que el cliente no tiene cuentas.
+    			vbxRegTransInfoPago.setVisible(true);
+    			lblRegTransClienteSinCuentas.setVisible(false);
+    			
+    			//Se definen las columnas de la tabla.
+    			tableColumnRegTransCuentasBancNumCuenta.setCellValueFactory(new PropertyValueFactory<>("numCuentaBanc"));
+    			tableColumnRegTransCuentasBancBanco.setCellValueFactory(new PropertyValueFactory<>("bancoCuentaBanc"));
+    			tableColumnRegTransCuentasBancTipo.setCellValueFactory(new PropertyValueFactory<>("tipoCuentaBanc"));
+    			
+    			//Buscar las cuentas
+    			listaCuentasBancarias = buscarCuentasBancarias(objTransaccion.getClienteTrans());
+    			//Se agregan los resultados a la tabla
+    			tableRegTransCuentasBanc.setItems(listaCuentasBancarias);
+    		}
+    		
+    	}catch(Exception e) {
+    		System.out.println(e.getLocalizedMessage());
+    	}
+    	
+    	//Muestra el pane de Información de Pago.
+    	esconderPanesMenosIndicado(regTransInfoPago);    	
+    	
+    }
     
     public void mostrarGarantiasRegTrans() {
     	//Consultar si el cliente asociado tiene garantías.
-    	String secuenciaSQL = "SELECT  garantias.* FROM garantias JOIN cliente ON clientegarantia=cedula WHERE cedula like '"
+    	String buscarGarantias = "SELECT  garantias.* FROM garantias JOIN cliente ON clientegarantia=cedula WHERE cedula like '"
     	+ objTransaccion.getClienteTrans()+"';";
-    	ResultSet garantias = controlGeneral.ejecutarSentencia(secuenciaSQL);
-    	
-    	//Si es un préstamo, muestreme el pane de Soportes.
-    	if(objTransaccion.getTipoTrans()=='P') {
-    		
-    		//Si el cliente tiene garantías se definen las columnas en las tablas. Después, se muestran los resultados.
-    		try {
-	    		if(garantias.next()) {
-	    			//Los panes de la información de las garantías se vuelven visibles.
-	    			vbxRegTransTablaGarantias.setVisible(true);
-	    	    	taGarantiasAñadidas.setVisible(true);
-	    			lblRegTransClieSinGarantias.setVisible(false);
-	    			hbxGarantiasAñadidas.setVisible(true);
-	    			
-	    			//Se definen las columnas de la tabla.
-	    			tableRegTransGarantiasCod.setCellValueFactory(new PropertyValueFactory<>("codGarantia"));
-	    			tableRegTransGarantiasTipo.setCellValueFactory(new PropertyValueFactory<>("tipoGarantia"));
-	    			tableRegTransGarantiasVal.setCellValueFactory(new PropertyValueFactory<>("valorGarantia"));
-	    			tableRegTransGarantiasUbi.setCellValueFactory(new PropertyValueFactory<>("ubiGarantia"));    			    		
-	    			
-	    			//Buscar garantías retorna un ObservableList<> con las garantías del usuario.
-	    			listaGarantias = buscarGarantias(objTransaccion.getClienteTrans());
-	    			//Se agrega esa lista de garantías a la tabla.
-	    			tableRegTransGarantias.setItems(listaGarantias);	    			
-        	}
-    		}catch(Exception e) {
-    			System.out.println(e.getLocalizedMessage());
-    		}    		
+    	ResultSet garantias = controlGeneral.ejecutarSentencia(buscarGarantias); 
+		
+		//Si el cliente tiene garantías se definen las columnas en las tablas. Después, se muestran los resultados.
+		try {
+    		if(garantias.next()) {
+    			//Los panes de la información de las garantías se vuelven visibles.
+    			vbxRegTransTablaGarantias.setVisible(true);
+    	    	taGarantiasAñadidas.setVisible(true);
+    			lblRegTransClieSinGarantias.setVisible(false);
+    			hbxGarantiasAñadidas.setVisible(true);
     			
-    		//Muestra el pane de Soportes.
-    		esconderPanesMenosIndicado(regTransSoportes);
-    	}
+    			//Se definen las columnas de la tabla.
+    			tableRegTransGarantiasCod.setCellValueFactory(new PropertyValueFactory<>("codGarantia"));
+    			tableRegTransGarantiasTipo.setCellValueFactory(new PropertyValueFactory<>("tipoGarantia"));
+    			tableRegTransGarantiasVal.setCellValueFactory(new PropertyValueFactory<>("valorGarantia"));
+    			tableRegTransGarantiasUbi.setCellValueFactory(new PropertyValueFactory<>("ubiGarantia"));    			    		
+    			
+    			//Buscar garantías retorna un ObservableList<> con las garantías del usuario.
+    			listaGarantias = buscarGarantias(objTransaccion.getClienteTrans());
+    			//Se agrega esa lista de garantías a la tabla.
+    			tableRegTransGarantias.setItems(listaGarantias);	    			
+    		}
+		}catch(Exception e) {
+			System.out.println(e.getLocalizedMessage());
+		}
+			
+		//Muestra el pane de Soportes.
+		esconderPanesMenosIndicado(regTransSoportes);
+    	
     }
     
+    //Método que busca las garantías que un cliente tiene registradas.
     public ObservableList<Garantia> buscarGarantias(String clienteGarantiaRS) throws SQLException{
     	
     	//Se crea la lista de garantías.
     	ObservableList<Garantia> listaGar = FXCollections.observableArrayList();
     	//Se hace la consulta en la base de datos.
-    	String secuenciaSQL = "SELECT  garantias.* FROM garantias JOIN cliente ON clientegarantia=cedula WHERE cedula like '"
+    	String buscarGarantias = "SELECT  garantias.* FROM garantias JOIN cliente ON clientegarantia=cedula WHERE cedula like '"
     	    	+ clienteGarantiaRS +"';";
-    	ResultSet garantiasRS = controlGeneral.ejecutarSentencia(secuenciaSQL);
+    	ResultSet garantiasRS = controlGeneral.ejecutarSentencia(buscarGarantias);
     	
     	//Si se encontraron resultados, cree un objeto Garantía y agreguelo a la lista.
     	while(garantiasRS.next()) {
@@ -315,12 +382,32 @@ public class TransControlador implements Initializable {
     	}
     	return listaGar;
     }
+    
+    //Método que busca las cuentas bancarias que un cliente tiene registradas.
+    public ObservableList<CuentaBancaria> buscarCuentasBancarias(String clienteCuenta) throws SQLException{
+    	
+    	//Se crea la lista de cuentas bancarias.
+    	ObservableList<CuentaBancaria> listaCuentas = FXCollections.observableArrayList();
+    	//Se hace la consulta en la base de datos.
+    	String buscarCuentasBancarias = "SELECT cuentasbancarias.* FROM cliente join cuentasbancarias ON"
+    			+ " clientecuenta=cedula where cedula like '"+objTransaccion.getClienteTrans()+"';";
+    	ResultSet cuentasBancarias = controlGeneral.ejecutarSentencia(buscarCuentasBancarias);
+    	
+    	//Si se encontraron resultados, cree un objeto garantía y agreguelo a la lista.
+    	while(cuentasBancarias.next()) {
+    		CuentaBancaria objCuentaBancaria = new CuentaBancaria(cuentasBancarias.getString("numcuentabanc"),cuentasBancarias.getString("clientecuenta"),
+    				cuentasBancarias.getString("bancocuentabanc"), cuentasBancarias.getString("tipocuentabanc").charAt(0));
+    		listaCuentas.add(objCuentaBancaria);
+    	}
+    	
+    	return listaCuentas;
+    }
 
     @FXML
     public void añadirGarantiaRegTrans(ActionEvent event) {
     	
     	if(tableRegTransGarantias.getSelectionModel().isEmpty()) {
-    		controlGeneral.mostrarAlerta(AlertType.ERROR, "Garantía inválida", "Garantía no seleccionada", "Por favor seleccione una garantía.");
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "Garantía inválida", "Garantía no seleccionada", "Por favor seleccione una garantía para añadirla.");
     		return;
     	}
     	
@@ -333,14 +420,29 @@ public class TransControlador implements Initializable {
     	listaGarantiasAñadidas.add(garantiaAñadida);
     	taGarantiasAñadidas.appendText("\n"+garantiaAñadida.toString());
     }
+    
+    @FXML
+    public void añadirCuentaBancariaRegTrans(ActionEvent event) {
+    	
+    	if(tableRegTransCuentasBanc.getSelectionModel().isEmpty()) {
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "Cuenta bancaria inválida", "Cuenta bancaria no seleccionada",
+    				"Por favor seleccione una cuenta bancaria para añadirla.");
+    		return;
+    	}
+    	//Se asocia la cuenta seleccionada al objeto de cuenta bancaria de la inversión.
+    	cuentaBancariaAsociada = tableRegTransCuentasBanc.getSelectionModel().getSelectedItem();
+    	objInversion.setCuentaPagoGeneral(cuentaBancariaAsociada.getNumCuentaBanc());
+    	//Se muestra la información de la cuenta bancaria seleccionada.
+    	txfRegTransCuentaAsociada.setText(cuentaBancariaAsociada.toString());
+    }
+   
 
     @FXML
     public void cancelarAñadidasRegTrans(ActionEvent event) {
     	listaGarantiasAñadidas = new ArrayList<>();
     	taGarantiasAñadidas.clear(); 	
     }
-    
-    
+        
     @FXML
     public void nuevaGarantiaRegTrans(ActionEvent event) throws IOException {
 
@@ -361,9 +463,32 @@ public class TransControlador implements Initializable {
     }
     
     @FXML
-    public void refrescarTableRegTransGarantias(ActionEvent event) throws SQLException {    	
+    public void nuevaCuentaBancariaRegTrans(ActionEvent event) throws IOException {
+    	
+    	//Se carga el FXML Nueva Garantía.
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/nuevaCuentaBanc.fxml"));
+    	Parent interfazNuevaCuenta = loader.load();
+		//Se crea un objeto del constructor NuevaGarantiaControlador y se le carga el controlador del fxml cargado anteriormente.
+    	NuevaCuentaBancControlador nuevaCuentaBancControlador = loader.getController();
+    	//Se ejecuta el método de cambio de cédula del controlador NuevaGarantía.
+    	nuevaCuentaBancControlador.setClienteNuevaCuentabanc(objTransaccion.getClienteTrans());
+    	
+    	Scene escenaNuevaCuenta = new Scene(interfazNuevaCuenta);	
+		Stage ventanaNuevaCuenta = new Stage();
+		ventanaNuevaCuenta.setScene(escenaNuevaCuenta);
+		ventanaNuevaCuenta.setTitle("Nueva cuenta");
+		ventanaNuevaCuenta.show();
+    }
+    
+    @FXML
+    public void refrescarTableRegTransGarantias(ActionEvent event) {    	
     	mostrarGarantiasRegTrans();
     }    
+    
+    @FXML
+    public void refrescarTableRegTransCuentasBanc(ActionEvent event) {
+    	mostrarCuentasBancarias();
+    }
     
     @FXML
     public void continuarAFiadorRegTrans(ActionEvent event) throws SQLException {    	
@@ -402,21 +527,15 @@ public class TransControlador implements Initializable {
     	
     	if(!(listaGarantiasAñadidas.isEmpty()) && fiadorOK)
     		objTransaccion.setEstadoSolicitud("PENDIENTE");
-
     	
-     	//Inserta la transacción en la base de datos y obtiene la primary key generada.
-    	String insertarTrans = "INSERT INTO transacciones(clienteTrans,tipoTrans,montoTrans,tasaTrans,numCuotas,fechaSolicitud,\r\n" + 
-    			"						  fechaAprobacion,fechaIniciacion,fechaTermino,estadoSolicitud)\r\n" + 
-    			"						  VALUES('"+objTransaccion.getClienteTrans()+"','"+objTransaccion.getTipoTrans()+"',"+objTransaccion.getMontoTrans()+
-    			","+objTransaccion.getTasaTrans()+","+objTransaccion.getNumCuotas()+",'"+objTransaccion.getFechaSolicitud()+"',"+
-    			objTransaccion.getFechaAprobacion()+",'"+objTransaccion.getFechaIniciacion()+"','"+objTransaccion.getFechaTermino()+"','"+
-    			objTransaccion.getEstadoSolicitud()+"')  RETURNING codTrans;";   	   
-    	ResultSet codTransGenerado = controlGeneral.ejecutarSentencia(insertarTrans);    	
+    	//Se crea la transacción en la base de datos y se obtiene el código generado del autoincremento.
+     	ResultSet codTransGenerado = insertarTransaccion();
     	if(codTransGenerado.next()) {
     		objTransaccion.setCodTrans(codTransGenerado.getInt("codtrans"));
     		objPrestamo.setCodPrestamo(objTransaccion.getCodTrans());
     	}
     	
+    	//Generar el préstamo a partir del código de transferencia obtenido.
     	String insertarPrestamo = "";
     	if(objPrestamo.getFiador()!=null) {
     		insertarPrestamo = "INSERT INTO prestamos VALUES ("+objPrestamo.getCodPrestamo()+",'"+objPrestamo.getFiador()+"');";    		
@@ -424,8 +543,9 @@ public class TransControlador implements Initializable {
     	else {
     		insertarPrestamo = "INSERT INTO prestamos(codPrestamo) VALUES ("+objPrestamo.getCodPrestamo()+");";
     	}
-    	controlGeneral.ejecutarSentenciaInsert(insertarPrestamo);    	
+    	controlGeneral.ejecutarSentenciaInsert(insertarPrestamo);
     	
+    	//Ingresar las garantías a la base de datos.
     	String insertarGarPrest = "";
     	if(!(listaGarantiasAñadidas.isEmpty())) {
     		for(Garantia gar : listaGarantiasAñadidas) {
@@ -434,10 +554,53 @@ public class TransControlador implements Initializable {
     		}
     		controlGeneral.mostrarAlerta(AlertType.INFORMATION, "Garantias añadidas", "Garantías asociadas al préstamo exitosamente.", null);
     	}
-    	
+    	controlGeneral.mostrarAlerta(AlertType.ERROR, "Solicitud creada", "Solicitud de préstamo creada", "Estado: " + objTransaccion.getEstadoSolicitud());
     	esconderPanesMenosIndicado(regTransBienvenido);
     }
     
+    @FXML
+    public void finalizarRegTransInversion(ActionEvent event) throws SQLException {
+    	
+    	//Validación de cuenta bancaria obligatorioa.
+    	if(objInversion.getCuentaPagoGeneral()==null) {
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "Cuenta bancaria inválida", "Cuenta bancaria necesaria",
+    				"Es obligatorio asociar una cuenta bancaria a la inversión.");
+    		return;
+    	}
+    	
+    	//Dado que el anterior if no permite seguir hasta que se haya asociado una cuenta bancaria,
+    	//la siguiente linea cambia el estado de la transacción a pendiente como si estuviese completa antes de la inserción a la bd.
+    	objTransaccion.setEstadoSolicitud("PENDIENTE");
+    	
+    	//Inserta la transacción en la base de datos y obtiene la key generada.
+    	ResultSet codTransGenerado = insertarTransaccion();
+    	if(codTransGenerado.next()) {
+    		objTransaccion.setCodTrans(codTransGenerado.getInt("codtrans"));
+    		objInversion.setCodInversion(objTransaccion.getCodTrans());
+    	}
+    	
+    	//Generar la inversión en la base de datos a partir del objeto inversión
+    	if(objInversion.getCuentaPagoGeneral()!=null) {
+    	String insertarInversion = "INSERT INTO inversiones"
+    			+ " VALUES ("+objInversion.getCodInversion()+",'"+objInversion.getCuentaPagoGeneral()+"');";
+    	controlGeneral.ejecutarSentenciaInsert(insertarInversion);
+    	controlGeneral.mostrarAlerta(AlertType.INFORMATION, "Solicitud creada", "Solicitud de inversión creada", "Estado: " + objTransaccion.getEstadoSolicitud());
+    	}
+    	esconderPanesMenosIndicado(regTransBienvenido);
+    }
+    
+    public ResultSet insertarTransaccion() {
+    	//Inserta la transacción en la base de datos y obtiene la primary key generada.
+    	String insertarTrans = "INSERT INTO transacciones(clienteTrans,tipoTrans,montoTrans,tasaTrans,numCuotas,fechaSolicitud,\r\n" + 
+    			"						  fechaAprobacion,fechaIniciacion,fechaTermino,estadoSolicitud)\r\n" + 
+    			"						  VALUES('"+objTransaccion.getClienteTrans()+"','"+objTransaccion.getTipoTrans()+"',"+objTransaccion.getMontoTrans()+
+    			","+objTransaccion.getTasaTrans()+","+objTransaccion.getNumCuotas()+",'"+objTransaccion.getFechaSolicitud()+"',"+
+    			objTransaccion.getFechaAprobacion()+",'"+objTransaccion.getFechaIniciacion()+"','"+objTransaccion.getFechaTermino()+"','"+
+    			objTransaccion.getEstadoSolicitud()+"')  RETURNING codTrans;";   	   
+    	ResultSet codTransGenerado = controlGeneral.ejecutarSentencia(insertarTrans);  
+    	
+    	return codTransGenerado;
+    }
     
     //Metodos generales.
     @FXML
@@ -471,8 +634,7 @@ public class TransControlador implements Initializable {
   			}catch(Exception e) {
   				e.getStackTrace();
   		}
-  	}
-	
+  	}	
 	
 	public void esconderPanesMenosIndicado(Node nodo) {
 		
@@ -487,25 +649,39 @@ public class TransControlador implements Initializable {
 	public void botonAtras(ActionEvent event) {
 		Node nodo = (Node) event.getSource();
 		Parent actual = nodo.getParent();
-		ObservableList<Node> hijos = stpCenter.getChildren();
-		for(int i=0; i<hijos.size();i++) {
-			if(hijos.get(i).equals(actual))
-				esconderPanesMenosIndicado(hijos.get(i-1));
+		
+		if(actual.equals(regTransInfoPago)) {
+			esconderPanesMenosIndicado(regTransSimulacion);
+		}else {
+			ObservableList<Node> hijos = stpCenter.getChildren();
+			for(int i=0; i<hijos.size();i++) {
+				if(hijos.get(i).equals(actual))
+					esconderPanesMenosIndicado(hijos.get(i-1));
+			}
 		}
-	}
+	}	
+	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		//Panel de Bienvenida
 		esconderPanesMenosIndicado(regTransBienvenido);	
+		
 		//Se inicia las opciones del ComboBox TipoTransaccion y se selecciona la primera.
 		regTransCbxTipoTrans.getItems().addAll("Préstamo","Inversión");
 		regTransCbxTipoTrans.getSelectionModel().selectFirst();
+		
 		//Se esconden los VBox que contienen las info de garantias. La tabla y las que serán añadidas.
 		vbxRegTransTablaGarantias.setVisible(false);
 		taGarantiasAñadidas.setVisible(false);
 		hbxGarantiasAñadidas.setVisible(false);
+		
 		//En la casilla fechaIniciacion se pone por defecto la hora del sistema.
 		dtpFechaIniciacion.setValue(LocalDate.now());
+		
+		//Se esconde el VBox que contiene la info de las cuentas bancarias del cliente.
+		vbxRegTransInfoPago.setVisible(false);
+		lblRegTransClienteSinCuentas.setVisible(true);
 	}
 
 }

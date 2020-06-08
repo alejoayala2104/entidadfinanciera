@@ -70,7 +70,7 @@
             <AnchorPane fx:id="regTransSimulacion" prefHeight="700.0" prefWidth="878.0" visible="false">
                <children>
                   <Label layoutX="106.0" layoutY="96.0" text="Monto" />
-                  <Label layoutX="536.0" layoutY="96.0" text="Número de cuotas mensuales" />
+                  <Label layoutX="536.0" layoutY="96.0" text="Número de periodos (Mes)" />
                   <Label layoutX="106.0" layoutY="225.0" text="Tasa de interés(EA)" />
                   <Label layoutX="536.0" layoutY="225.0" text="Fecha de Iniciación" />
                   <TextField fx:id="txfRegTransMonto" layoutX="106.0" layoutY="113.0" onKeyPressed="#validarInputNumerico" />
@@ -88,6 +88,11 @@
                         <TableColumn fx:id="tableSimulacionFPago" prefWidth="97.0" text="Fecha de pago" />
                     </columns>
                   </TableView>
+                  <Label layoutX="107.0" layoutY="48.0" text="Simulación de transacción">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
             <AnchorPane fx:id="regTransSoportes" prefHeight="700.0" prefWidth="878.0" visible="false">
@@ -147,7 +152,50 @@
                   </Label>
                   <Button layoutX="237.0" layoutY="289.0" mnemonicParsing="false" text="Buscar" />
                   <Button layoutX="68.0" layoutY="639.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
-                  <Button layoutX="760.0" layoutY="639.0" mnemonicParsing="false" onAction="#finalizarRegTransPrestamo" text="Button" />
+                  <Button layoutX="760.0" layoutY="639.0" mnemonicParsing="false" onAction="#finalizarRegTransPrestamo" text="Finalizar" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="regTransInfoPago" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="66.0" layoutY="76.0" text="Información de pago">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="66.0" layoutY="179.0" text="Cuenta bancaria">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="269.0" layoutY="186.0" mnemonicParsing="false" onAction="#nuevaCuentaBancariaRegTrans" text="Nueva cuenta" />
+                  <Button layoutX="373.0" layoutY="186.0" mnemonicParsing="false" onAction="#refrescarTableRegTransCuentasBanc" text="Refrescar" />
+                  <Label fx:id="lblRegTransClienteSinCuentas" layoutX="66.0" layoutY="232.0" text="El cliente no ha registrado cuentas bancarias">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <VBox fx:id="vbxRegTransInfoPago" layoutX="66.0" layoutY="232.0" prefHeight="381.0" prefWidth="759.0" spacing="10.0">
+                     <children>
+                        <Label text="Cuentas del cliente">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label text="Seleccione una cuenta y presione el botón asociar" />
+                        <TableView fx:id="tableRegTransCuentasBanc" prefHeight="163.0" prefWidth="759.0">
+                          <columns>
+                            <TableColumn fx:id="tableColumnRegTransCuentasBancNumCuenta" prefWidth="208.0" text="Número de cuenta" />
+                            <TableColumn fx:id="tableColumnRegTransCuentasBancBanco" minWidth="0.0" prefWidth="332.0" text="Banco" />
+                              <TableColumn fx:id="tableColumnRegTransCuentasBancTipo" prefWidth="217.0" text="Tipo de cuenta" />
+                          </columns>
+                        </TableView>
+                        <Button mnemonicParsing="false" onAction="#añadirCuentaBancariaRegTrans" text="Asociar" />
+                        <Label text="Cuenta asociada" />
+                        <TextField fx:id="txfRegTransCuentaAsociada" />
+                     </children>
+                  </VBox>
+                  <Button layoutX="747.0" layoutY="639.0" mnemonicParsing="false" onAction="#finalizarRegTransInversion" text="Finalizar" />
+                  <Button layoutX="66.0" layoutY="639.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
                </children>
             </AnchorPane>
          </children>

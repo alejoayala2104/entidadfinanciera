@@ -52,8 +52,8 @@ public class NuevaGarantiaControlador {
     }
 
     @FXML
-    public void guardarNuevaGarantia(ActionEvent event) throws IOException, SQLException {
-    	System.out.println(clienteNuevaGarantia.toString());
+    public void guardarNuevaGarantia(ActionEvent event) throws IOException, SQLException {    	
+
     	if(cbxTipoNuevaGarantia.getValue()==null || 
     			txfValorNuevaGarantia.getText().isEmpty() || txfUbiNuevaGarantia.getText().isEmpty()) {
     		controlGeneral.mostrarAlerta(AlertType.ERROR, "Campos vacíos", "Todos los campos son obligatorios", "Por favor rellene los campos.");
@@ -76,18 +76,7 @@ public class NuevaGarantiaControlador {
     	//Cerrar la ventana.
     	cancelarNuevaGarantia(event);    	
     	
-    }
-    
-    @FXML
-	public void validarInputEntero(KeyEvent event) {
-		try {
-			TextField textfield = (TextField) event.getSource();
-			textfield.setTextFormatter(new TextFormatter<>(change ->
-	        (change.getControlNewText().matches("^[0-9]{0,3}$")) ? change : null));
-			}catch(Exception e) {
-				e.getStackTrace();
-		}
-	}
+    }  
     
     @FXML
   	public void validarInputEnteroSinLimite(KeyEvent event) {

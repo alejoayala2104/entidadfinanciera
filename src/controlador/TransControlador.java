@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.embed.swt.FXCanvas;
 import javafx.event.ActionEvent;
@@ -353,7 +354,7 @@ public class TransControlador implements Initializable {
     			//Buscar garantías retorna un ObservableList<> con las garantías del usuario.
     			listaGarantias = buscarGarantias(objTransaccion.getClienteTrans());
     			//Se agrega esa lista de garantías a la tabla.
-    			tableRegTransGarantias.setItems(listaGarantias);	    			
+    			tableRegTransGarantias.setItems(listaGarantias);
     		}
 		}catch(Exception e) {
 			System.out.println(e.getLocalizedMessage());
@@ -554,7 +555,7 @@ public class TransControlador implements Initializable {
     		}
     		controlGeneral.mostrarAlerta(AlertType.INFORMATION, "Garantias añadidas", "Garantías asociadas al préstamo exitosamente.", null);
     	}
-    	controlGeneral.mostrarAlerta(AlertType.ERROR, "Solicitud creada", "Solicitud de préstamo creada", "Estado: " + objTransaccion.getEstadoSolicitud());
+    	controlGeneral.mostrarAlerta(AlertType.INFORMATION, "Solicitud creada", "Solicitud de préstamo creada", "Estado: " + objTransaccion.getEstadoSolicitud());
     	esconderPanesMenosIndicado(regTransBienvenido);
     }
     
@@ -601,6 +602,200 @@ public class TransControlador implements Initializable {
     	
     	return codTransGenerado;
     }
+    
+
+    //Consultar transacción: Cédula.
+    @FXML
+    private AnchorPane consTransCedula;
+    @FXML
+    private TextField txfConsTransCedula;
+
+    //Consultar transacción: Búsqueda.
+    @FXML
+    private AnchorPane consTransBusqueda;
+    @FXML
+    private TableView<Transaccion> tblConsultarTrans;
+    @FXML
+    private TableColumn<Transaccion, Integer> tblConsultarTransCod;
+    @FXML
+    private TableColumn<Transaccion, Character> tblConsultarTransTipo;
+    @FXML
+    private TableColumn<Transaccion, Double> tblConsultarTransMonto;
+    @FXML
+    private TableColumn<Transaccion, LocalDate> tblConsultarTransFechaIni;
+    @FXML
+    private TableColumn<Transaccion, String> tblConsultarTransEstado;
+    ObservableList<Transaccion> listaTransacciones;
+    
+    @FXML
+    public void entrarConsTrans(ActionEvent event) {
+    	objTransaccion = new Transaccion();
+    	esconderPanesMenosIndicado(consTransCedula);
+    }
+    
+    @FXML 
+    public void consTransContinuarABusqueda(ActionEvent event) throws SQLException {
+    	
+    	ResultSet clienteConsulta = controlGeneral.ejecutarSentencia("SELECT * from cliente WHERE cedula like '" + txfConsTransCedula.getText() +"';");
+    	if(clienteConsulta.next()) {
+    		String cedulaConsulta = clienteConsulta.getString("cedula");    		
+    		try {
+    			
+    			listaTransacciones=buscarTransacciones(cedulaConsulta);
+    		
+	    		if(!listaTransacciones.isEmpty()) {
+		    		tblConsultarTransCod.setCellValueFactory(new PropertyValueFactory<>("codTrans"));
+		        	tblConsultarTransTipo.setCellValueFactory(new PropertyValueFactory<>("tipoTrans"));
+		        	tblConsultarTransMonto.setCellValueFactory(new PropertyValueFactory<>("montoTrans"));
+		        	tblConsultarTransFechaIni.setCellValueFactory(new PropertyValueFactory<>("fechaIniciacion"));
+		        	tblConsultarTransEstado.setCellValueFactory(new PropertyValueFactory<>("estadoSolicitud"));  
+		        	
+		        	tblConsultarTrans.setItems(listaTransacciones);
+	    		}
+    		}catch(Exception e) {
+    			System.out.println(e.toString());
+    		}
+        	
+        	esconderPanesMenosIndicado(consTransBusqueda);
+    	}
+    	else {
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "Cédula incorrecta", "Cliente no encontrado", "No se encontraron registros del cliente en el sistema.");
+    	}
+    }
+   
+    public ObservableList<Transaccion> buscarTransacciones(String clienteTrans) throws SQLException{    	
+    
+    	ObservableList<Transaccion> listaTrans = FXCollections.observableArrayList();    
+    	String buscarTrans = "SELECT transacciones.* from transacciones where clientetrans like '"+clienteTrans+"';";
+    	ResultSet trans = controlGeneral.ejecutarSentencia(buscarTrans);
+    	
+    	while(trans.next()) {
+    		Transaccion objTrans = new Transaccion();
+    		objTrans.setCodTrans(trans.getInt("codTrans"));
+    		objTrans.setClienteTrans(trans.getString("clienteTrans"));
+    		objTrans.setTipoTrans(trans.getString("tipoTrans").charAt(0));
+    		objTrans.setMontoTrans(trans.getDouble("montoTrans"));
+    		objTrans.setTasaTrans(trans.getDouble("tasaTrans"));
+    		objTrans.setNumCuotas(trans.getInt("numCuotas"));
+    		objTrans.setFechaSolicitud(trans.getDate("fechaSolicitud").toLocalDate());
+    		objTrans.setFechaAprobacion(null);
+    		objTrans.setFechaIniciacion(trans.getDate("fechaIniciacion").toLocalDate());
+    		objTrans.setFechaTermino(trans.getDate("fechaTermino").toLocalDate());
+    		objTrans.setEstadoSolicitud(trans.getString("estadoSolicitud"));    	
+    		
+    		listaTrans.add(objTrans);
+    	}
+    	return listaTrans;
+    }
+    
+    @FXML
+    public void verDetallesConsTrans(ActionEvent event) throws SQLException {
+    	Transaccion transSelected = tblConsultarTrans.getSelectionModel().getSelectedItem();
+    	if(transSelected==null) {
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "ERROR: Transacción no seleccionada", "Transacción no seleccionada",
+    				"Por favor haga click sobre alguna transacción y presione Ver Detalles.");
+    		return;
+    	}
+    	
+    	AnchorPane verDetalles = new AnchorPane();
+    	TextArea txaVerDetalles = new TextArea();
+    	verDetalles.getChildren().add(txaVerDetalles);
+    	
+    	txaVerDetalles.setText(transSelected.toString());
+    	String fechaAprobacion;
+    	if(transSelected.getFechaAprobacion()==null)
+    		fechaAprobacion = "No definida aún";
+    	else
+    		fechaAprobacion = transSelected.getFechaAprobacion().toString();
+    	
+    	//Búsqueda de todos los datos de la transacción.
+    	String datosTrans = "\nTRANSACCIÓN"+
+					    	"\nCódigo:" + transSelected.getCodTrans()+
+					    	"\nTipo: " +transSelected.getTipoTrans()+
+					    	"\nMonto: " +transSelected.getMontoTrans()+
+					    	"\nTasa efectiva anual: " + transSelected.getTasaTrans()+
+					    	"\nNúmero de periodos: " + transSelected.getNumCuotas()+
+					    	"\nFecha de solicitud: " + transSelected.getFechaSolicitud()+
+					    	"\nFecha de aprobación: " + fechaAprobacion+
+					    	"\nFecha de iniciación: " + transSelected.getFechaIniciacion()+
+					    	"\nFecha de término: " + transSelected.getFechaTermino()+
+					    	"\nEstado de solicitud: " + transSelected.getEstadoSolicitud();
+    	
+    	//Obtención de los datos del cliente.
+    	String datosCliente ="";
+    	ResultSet clienteTrans = controlGeneral.ejecutarSentencia("select cliente.* from cliente "
+    			+ "join transacciones on cedula=clientetrans where codtrans = "+transSelected.getCodTrans()+";");
+    	if(clienteTrans.next()) {
+    	datosCliente = "\nCLIENTE"+
+				    	"\nCédula: " + clienteTrans.getString("cedula")+
+				    	"\nNombre: " +clienteTrans.getString("nombres")+
+				    	"\nTeléfono: " + clienteTrans.getString("telefono")+
+				    	"\nEmail: " + clienteTrans.getString("email")+
+				    	"\nDirección: " + clienteTrans.getString("direccion");
+    	}
+    	
+    	String datosExtra="";
+    	
+    	if(transSelected.getTipoTrans()=='I') {
+    		//Se obtiene la cuenta bancaria.
+    		ResultSet cuentaTrans = controlGeneral.ejecutarSentencia("select cuentasbancarias.* from cuentasbancarias join inversiones on cuentapagogeneral=numcuentabanc\r\n" + 
+    				"join transacciones on codtrans=codinversion where codtrans ="+transSelected.getCodTrans()+";");
+    		if(cuentaTrans.next()) {
+    		datosExtra = "\nCUENTA BANCARIA"+
+    					"\nNúmero de cuenta: " + cuentaTrans.getString("numcuentabanc")+
+    					"\nBanco: " + cuentaTrans.getString("bancocuentabanc")+
+    					"\nTipo de cuenta: " + cuentaTrans.getString("tipocuentabanc").charAt(0);
+    		}    		 		
+    	}
+    	else {//Si no es una inversión, es un préstamo.
+    		
+    		//Se obtiene el Fiador.
+    		ResultSet fiadorTrans = controlGeneral.ejecutarSentencia("select cliente.* from cliente "
+    				+ "join prestamos on fiador=cedula join transacciones on codprestamo=codtrans\r\n" + 
+    				"where codtrans = "+transSelected.getCodTrans()+";");
+    		//Se obtiene las garantías.
+    		ResultSet garantiasTrans = controlGeneral.ejecutarSentencia("select garantias.* from garantias natural join garantias_prestamo join transacciones on codprestamo=codtrans\r\n" + 
+    				"where codtrans = "+transSelected.getCodTrans()+";");    		
+    		
+    		if(fiadorTrans.next()) {
+    		datosExtra = "\nFIADOR"+
+    				"\nCédula: " + fiadorTrans.getString("cedula")+
+    		    	"\nNombre: " +fiadorTrans.getString("nombres")+
+    		    	"\nTeléfono: " + fiadorTrans.getString("telefono")+
+    		    	"\nEmail: " + fiadorTrans.getString("email")+
+    		    	"\nDirección: " + fiadorTrans.getString("direccion");
+    		}
+    		StringBuilder datosGarantias = new StringBuilder();
+    		if(garantiasTrans.next()) {
+    			ResultSet garantiasTrans2 = controlGeneral.ejecutarSentencia("select garantias.* from garantias natural join garantias_prestamo join transacciones on codprestamo=codtrans\r\n" + 
+        				"where codtrans = "+transSelected.getCodTrans()+";"); 
+	    		datosGarantias.append("\nGARANTIAS");
+	    		while(garantiasTrans2.next()) {
+	    			datosGarantias.append("\n--------------------------------------"+
+	    							"\nCódigo: " + garantiasTrans2.getInt("codgarantia")+
+	    							"\nTipo: " + garantiasTrans2.getString("tipogarantia")+
+	    							"\nValor: " + garantiasTrans2.getString("valorgarantia")+
+	    							"\nUbicación: " + garantiasTrans2.getString("ubigarantia"));
+	    		}
+	    		
+	    		datosExtra = datosExtra + datosGarantias.toString();
+    		}
+    	}
+    	
+    	String stgVerDetalles = "DETALLES\n" + datosTrans + datosCliente+datosExtra;   	
+    	
+    	txaVerDetalles.setText(stgVerDetalles);
+    	
+    	Scene verDetallesScene = new Scene(verDetalles);
+		Stage verDetallesStage = new Stage();
+		verDetallesStage.setScene(verDetallesScene);
+		verDetallesStage.setTitle("Detalles de transacción");
+		verDetallesStage.show();
+    	System.out.println(transSelected.toString());
+    }
+   
+    
+    
     
     //Metodos generales.
     @FXML
@@ -659,7 +854,7 @@ public class TransControlador implements Initializable {
 					esconderPanesMenosIndicado(hijos.get(i-1));
 			}
 		}
-	}	
+	}
 	
 	
 	@Override
@@ -682,6 +877,8 @@ public class TransControlador implements Initializable {
 		//Se esconde el VBox que contiene la info de las cuentas bancarias del cliente.
 		vbxRegTransInfoPago.setVisible(false);
 		lblRegTransClienteSinCuentas.setVisible(true);
+		
+	
 	}
 
 }

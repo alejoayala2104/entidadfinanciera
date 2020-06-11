@@ -68,8 +68,6 @@ public class ControladorGeneral {
 	}
 	
 	
-	
-	
 	@FXML
 	public void validarInputNumerico(KeyEvent event) {
 		try {

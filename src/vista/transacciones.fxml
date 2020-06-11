@@ -22,7 +22,10 @@
          <children>
             <AnchorPane prefHeight="97.0" prefWidth="274.0" style="-fx-background-color: #2A1647;">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="57.0" layoutY="30.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Transacciones" textFill="WHITE" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="57.0" layoutY="30.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Transacciones" textFill="WHITE">
+                     <font>
+                        <Font size="26.0" />
+                     </font></Label>
                </children>
             </AnchorPane>
             <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#entrarHome" prefHeight="50.0" style="-fx-alignment: center-left;" styleClass="buttonMenu" text="Inicio" textFill="WHITE" />
@@ -33,7 +36,7 @@
                         <Font name="Cambria" size="12.0" />
                      </font>
                   </Button>
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" style="-fx-alignment: center-left;" styleClass="buttonMenu" text="Consulta" textFill="WHITE" />
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#entrarConsTrans" prefHeight="50.0" style="-fx-alignment: center-left;" styleClass="buttonMenu" text="Consulta" textFill="WHITE" />
                   <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" style="-fx-alignment: center-left;" styleClass="buttonMenu" text="Actualizar" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
@@ -155,7 +158,7 @@
                   <Button layoutX="760.0" layoutY="639.0" mnemonicParsing="false" onAction="#finalizarRegTransPrestamo" text="Finalizar" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="regTransInfoPago" prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane fx:id="regTransInfoPago" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <Label layoutX="66.0" layoutY="76.0" text="Información de pago">
                      <font>
@@ -196,6 +199,41 @@
                   </VBox>
                   <Button layoutX="747.0" layoutY="639.0" mnemonicParsing="false" onAction="#finalizarRegTransInversion" text="Finalizar" />
                   <Button layoutX="66.0" layoutY="639.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="consTransCedula" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label layoutX="64.0" layoutY="151.0" text="Cédula del cliente">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="64.0" layoutY="66.0" text="Consultar transacción">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txfConsTransCedula" layoutX="64.0" layoutY="191.0" prefHeight="30.0" prefWidth="238.0" />
+                  <Button layoutX="776.0" layoutY="638.0" mnemonicParsing="false" onAction="#consTransContinuarABusqueda" text="Continuar" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="consTransBusqueda" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="64.0" layoutY="52.0" text="Transacciones">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+                  <TableView fx:id="tblConsultarTrans" layoutX="64.0" layoutY="191.0" prefHeight="318.0" prefWidth="767.0">
+                    <columns>
+                      <TableColumn fx:id="tblConsultarTransCod" prefWidth="88.0" text="Código" />
+                      <TableColumn fx:id="tblConsultarTransTipo" prefWidth="156.0" text="Tipo" />
+                        <TableColumn fx:id="tblConsultarTransMonto" prefWidth="171.0" text="Monto" />
+                        <TableColumn fx:id="tblConsultarTransFechaIni" prefWidth="168.0" text="Fecha iniciación" />
+                        <TableColumn fx:id="tblConsultarTransEstado" prefWidth="183.0" text="Estado" />
+                    </columns>
+                  </TableView>
+                  <Button layoutX="753.0" layoutY="522.0" mnemonicParsing="false" onAction="#verDetallesConsTrans" text="Ver detalles" />
                </children>
             </AnchorPane>
          </children>

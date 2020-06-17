@@ -176,11 +176,17 @@ public class TransControlador implements Initializable {
     
     @FXML
     public void registrarTrans(ActionEvent event) throws IOException {    	
+    	txfRegTransCedula.clear();
     	esconderPanesMenosIndicado(regTransCedula);
-    } 
+    }
 
     @FXML
     public void continuarATipoTransaccion(ActionEvent event) throws IOException, SQLException {
+    	
+    	//Resetea todo si se decide escribir otro usuario al darle atrás
+    	if(!(txfRegTransCedula.getText().equalsIgnoreCase(objCliente.getCedula()))) {
+    		resetearTodo();
+    	}
     	
     	clienteRegistro = controlGeneral.ejecutarSentencia("SELECT * from cliente WHERE cedula like '" + txfRegTransCedula.getText() +"';");
     	if(clienteRegistro.next()) {
@@ -190,7 +196,43 @@ public class TransControlador implements Initializable {
     	}
     	else {
     		controlGeneral.mostrarAlerta(AlertType.ERROR, "Cédula incorrecta", "Cliente no encontrado", "No se encontraron registros del cliente en el sistema.");
-    	}
+    	}    	
+    }
+    
+    public void resetearTodo() {
+    	this.objCliente = new Cliente(null,null,null,null,null);
+    	this.objCuentaBancaria = new CuentaBancaria();
+    	this.objGarantia = new Garantia();
+    	this.objGarantias_Prestamo = new Garantias_Prestamo();
+    	this.objInversion = new Inversion();
+    	this.objPrestamo = new Prestamo();
+    	this.objTransaccion = new Transaccion();
+		
+		//Generales	
+		this.cedulaCliente = "";
+		this.tipoTrans = null;
+		this.cedulaFiador=null;
+		this.monto = 0;this.tasaEA=0;this.mensualidad=0;
+		this.numCuotas = 0;
+		this.fechaIniciacion=null;
+		this.fechaTermino=null;
+		this.fechaSolicitud=null;
+		
+		this.clienteRegistro=null;
+		
+		txfRegTransMonto.clear();
+		txfRegTransNumCuotas.clear();
+		txfRegTransTasa.clear();
+		dtpFechaIniciacion.setValue(LocalDate.now());
+		txfRegTransCuentaAsociada.clear();
+		txfRegTransFiador.clear();
+		tableSimulacion.getItems().clear();
+		
+		this.listaCuentasBancarias = null;
+		this.cuentaBancariaAsociada = new CuentaBancaria();
+		this.listaGarantias = null;
+		this.listaGarantiasAñadidas = new ArrayList<Garantia>();  	    
+		this.listaSimulacion = null;
     }
 
     @FXML
@@ -629,6 +671,7 @@ public class TransControlador implements Initializable {
     @FXML
     public void entrarConsTrans(ActionEvent event) {
     	objTransaccion = new Transaccion();
+    	txfConsTransCedula.clear();
     	esconderPanesMenosIndicado(consTransCedula);
     }
     

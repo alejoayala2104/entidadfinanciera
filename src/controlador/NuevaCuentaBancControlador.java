@@ -53,19 +53,14 @@ public class NuevaCuentaBancControlador {
     	}
     	nuevaCuentaBancaria.setNumCuentaBanc(txfNumCuentaBanc.getText());
     	nuevaCuentaBancaria.setClienteCuenta(clienteCuenta);
-    	nuevaCuentaBancaria.setBancoCuentaBanc(txfNumCuentaBanc.getText());
-    	
-    	if(cbxTipoCuentaBanc.getValue().equals("Corriente"))
-    		nuevaCuentaBancaria.setTipoCuentaBanc('C');
-    	else
-    		nuevaCuentaBancaria.setTipoCuentaBanc('A');
-    	System.out.println(nuevaCuentaBancaria.toString());
+    	nuevaCuentaBancaria.setBancoCuentaBanc(txfBancoCuentaBanc.getText());
+    	nuevaCuentaBancaria.setTipoCuentaBanc(cbxTipoCuentaBanc.getValue().toString());    	
     	
     	String insertarCuenta = "INSERT INTO cuentasbancarias VALUES ('"+nuevaCuentaBancaria.getNumCuentaBanc()+"','"+
     	nuevaCuentaBancaria.getClienteCuenta()+"','"+nuevaCuentaBancaria.getBancoCuentaBanc()+"','"+nuevaCuentaBancaria.getTipoCuentaBanc()+"');";
     	controlGeneral.ejecutarSentenciaInsert(insertarCuenta);
     	
-    	controlGeneral.mostrarAlertaSinContent(AlertType.INFORMATION, "Garantía guardada", "Garantía guardada con éxito");    	    	
+    	controlGeneral.mostrarAlertaSinContent(AlertType.INFORMATION, "Cuenta bancaría guardada", "Cuenta bancaria con éxito");    	    	
     	
     	//Cerrar la ventana.
     	cancelarNuevaCuenta(event);  
@@ -84,7 +79,7 @@ public class NuevaCuentaBancControlador {
 
     @FXML
     public void initialize() {
-    	cbxTipoCuentaBanc.getItems().addAll("Corriente","Ahorros");
+    	cbxTipoCuentaBanc.getItems().addAll("CORRIENTE","AHORROS");
     	cbxTipoCuentaBanc.getSelectionModel().selectFirst();
     }
 	

@@ -218,20 +218,14 @@ public class TransControlador implements Initializable {
     	this.monto = Double.parseDouble(txfRegTransMonto.getText());
     	this.numCuotas = Integer.parseInt(txfRegTransNumCuotas.getText());
     	this.tasaEA = Double.parseDouble(txfRegTransTasa.getText());
-    	
-    	//Validación numCuotas
-    	if(numCuotas>120) {
-    		controlGeneral.mostrarAlerta(AlertType.ERROR, "Error", "Número de cuotas inválido","Máximo 120 cuotas");
-    		return;
-    	}
-    	
+  
     	double tasaMensual = (Math.pow(tasaEA+1, 1.0/12.0)) - 1.0;
     	
     	if(objTransaccion.getTipoTrans()=='I') {
     		this.mensualidad = monto * ((Math.pow(1+(tasaMensual/100.0), numCuotas))-1);
     	}else {
     		this.mensualidad= (tasaMensual*monto)/(1.0 - (Math.pow((1+tasaMensual),-numCuotas)));
-    	}    	
+    	}
     	
     	this.fechaIniciacion = dtpFechaIniciacion.getValue();        	
     	
@@ -264,7 +258,12 @@ public class TransControlador implements Initializable {
     	}
     	//Se muestra la simulación de crédito según los datos introducidos.
     	//A partir de este método se obtiene la mensualidad de las cuotas.
+    	try {
     	generarSimulacion(event);
+    	}catch(Exception e) {
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "Error de Simulación", "ERROR en los valores de la simulación",
+    				"Por favor revise los datos de la simulación.");
+    	}
     	
     	if(objTransaccion.getTipoTrans()=='I') {
     		//Por defecto, el cliente no tiene cuentas bancarias, entonces se esconden antes de hacer la búsqueda.
@@ -397,7 +396,7 @@ public class TransControlador implements Initializable {
     	//Si se encontraron resultados, cree un objeto garantía y agreguelo a la lista.
     	while(cuentasBancarias.next()) {
     		CuentaBancaria objCuentaBancaria = new CuentaBancaria(cuentasBancarias.getString("numcuentabanc"),cuentasBancarias.getString("clientecuenta"),
-    				cuentasBancarias.getString("bancocuentabanc"), cuentasBancarias.getString("tipocuentabanc").charAt(0));
+    				cuentasBancarias.getString("bancocuentabanc"), cuentasBancarias.getString("tipocuentabanc"));
     		listaCuentas.add(objCuentaBancaria);
     	}
     	
@@ -419,7 +418,7 @@ public class TransControlador implements Initializable {
     			return;
     	}
     	listaGarantiasAñadidas.add(garantiaAñadida);
-    	taGarantiasAñadidas.appendText("\n"+garantiaAñadida.toString());
+    	taGarantiasAñadidas.appendText("\n"+garantiaAñadida.mostrarGarantia());
     }
     
     @FXML
@@ -434,7 +433,7 @@ public class TransControlador implements Initializable {
     	cuentaBancariaAsociada = tableRegTransCuentasBanc.getSelectionModel().getSelectedItem();
     	objInversion.setCuentaPagoGeneral(cuentaBancariaAsociada.getNumCuentaBanc());
     	//Se muestra la información de la cuenta bancaria seleccionada.
-    	txfRegTransCuentaAsociada.setText(cuentaBancariaAsociada.toString());
+    	txfRegTransCuentaAsociada.setText(cuentaBancariaAsociada.mostrarCuentaBancaria());
     }
    
 
@@ -744,7 +743,7 @@ public class TransControlador implements Initializable {
     		datosExtra = "\nCUENTA BANCARIA"+
     					"\nNúmero de cuenta: " + cuentaTrans.getString("numcuentabanc")+
     					"\nBanco: " + cuentaTrans.getString("bancocuentabanc")+
-    					"\nTipo de cuenta: " + cuentaTrans.getString("tipocuentabanc").charAt(0);
+    					"\nTipo de cuenta: " + cuentaTrans.getString("tipocuentabanc");
     		}    		 		
     	}
     	else {//Si no es una inversión, es un préstamo.

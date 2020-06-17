@@ -5,14 +5,14 @@ public class CuentaBancaria {
 	private String numCuentaBanc;
 	private String clienteCuenta;
 	private String bancoCuentaBanc;
-	private char tipoCuentaBanc;
+	private String tipoCuentaBanc;
 	
 	public CuentaBancaria() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public CuentaBancaria(String numCuentaBanc, String clienteCuenta, String bancoCuentaBanc, char tipoCuentaBanc) {
+	public CuentaBancaria(String numCuentaBanc, String clienteCuenta, String bancoCuentaBanc, String tipoCuentaBanc) {
 		this.numCuentaBanc = numCuentaBanc;
 		this.clienteCuenta = clienteCuenta;
 		this.bancoCuentaBanc = bancoCuentaBanc;
@@ -31,7 +31,7 @@ public class CuentaBancaria {
 		return bancoCuentaBanc;
 	}
 
-	public char getTipoCuentaBanc() {
+	public String getTipoCuentaBanc() {
 		return tipoCuentaBanc;
 	}
 
@@ -47,7 +47,7 @@ public class CuentaBancaria {
 		this.bancoCuentaBanc = bancoCuentaBanc;
 	}
 
-	public void setTipoCuentaBanc(char tipoCuentaBanc) {
+	public void setTipoCuentaBanc(String tipoCuentaBanc) {
 		this.tipoCuentaBanc = tipoCuentaBanc;
 	}
 
@@ -55,5 +55,9 @@ public class CuentaBancaria {
 	public String toString() {
 		return "CuentaBancaria [numCuentaBanc=" + numCuentaBanc + ", clienteCuenta=" + clienteCuenta
 				+ ", bancoCuentaBanc=" + bancoCuentaBanc + ", tipoCuentaBanc=" + tipoCuentaBanc + "]";
+	}	
+	
+	public String mostrarCuentaBancaria() {		
+		return "NÚMERO DE CUENTA: " + this.numCuentaBanc + " - BANCO: " + this.bancoCuentaBanc.toUpperCase() + " - TIPO: " + tipoCuentaBanc;
 	}
 }

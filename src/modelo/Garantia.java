@@ -76,4 +76,9 @@ public class Garantia {
 		return "Garantia [codGarantia=" + codGarantia + ", clienteGarantia=" + clienteGarantia + ", tipoGarantia="
 				+ tipoGarantia + ", valorGarantia=" + valorGarantia + ", ubiGarantia=" + ubiGarantia + "]";
 	}
+	
+	public String mostrarGarantia() {
+		return "COD: " + this.codGarantia + " - TIPO: " + this.tipoGarantia.toUpperCase() + " - VALOR: $" + this.valorGarantia.toUpperCase() +
+				" - UBICACIÓN: " + this.ubiGarantia.toUpperCase();
+	}
 }

@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -37,11 +38,10 @@
                      </font>
                   </Button>
                   <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#entrarConsTrans" prefHeight="50.0" style="-fx-alignment: center-left;" styleClass="buttonMenu" text="Consulta" textFill="WHITE" />
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" style="-fx-alignment: center-left;" styleClass="buttonMenu" text="Actualizar" textFill="WHITE">
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#entrarActReg" prefHeight="50.0" style="-fx-alignment: center-left;" styleClass="buttonMenu" text="Actualizar" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font></Button>
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" style="-fx-alignment: center-left;" styleClass="buttonMenu" text="Pagos" textFill="WHITE" />
                </children>
                <VBox.margin>
                   <Insets />
@@ -217,7 +217,7 @@
                   <Button layoutX="776.0" layoutY="638.0" mnemonicParsing="false" onAction="#consTransContinuarABusqueda" text="Continuar" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="consTransBusqueda" prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane fx:id="consTransBusqueda" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <Label layoutX="64.0" layoutY="52.0" text="Transacciones">
                      <font>
@@ -234,6 +234,90 @@
                     </columns>
                   </TableView>
                   <Button layoutX="753.0" layoutY="522.0" mnemonicParsing="false" onAction="#verDetallesConsTrans" text="Ver detalles" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="actTransCedula" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label layoutX="64.0" layoutY="200.0" text="Cédula del cliente">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="64.0" layoutY="66.0" text="Bienvenido a actualizar transacción!">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txfActTransCedula" layoutX="64.0" layoutY="233.0" prefHeight="30.0" prefWidth="238.0" />
+                  <Button layoutX="776.0" layoutY="638.0" mnemonicParsing="false" onAction="#actTransContinuarABusqueda" text="Continuar" />
+                  <Label layoutX="64.0" layoutY="160.0" text="Digite el cliente de la transacción">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="actTransBusqueda" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label layoutX="64.0" layoutY="52.0" text="Actualizar transacción">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+                  <TableView fx:id="tblActTrans" layoutX="64.0" layoutY="191.0" prefHeight="318.0" prefWidth="767.0">
+                     <columns>
+                        <TableColumn fx:id="tblActTransCod" prefWidth="88.0" text="Código" />
+                        <TableColumn fx:id="tblActTransTipo" prefWidth="156.0" text="Tipo" />
+                        <TableColumn fx:id="tblActTransMonto" prefWidth="171.0" text="Monto" />
+                        <TableColumn fx:id="tblActTransFechaIni" prefWidth="168.0" text="Fecha iniciación" />
+                        <TableColumn fx:id="tblActTransEstado" prefWidth="183.0" text="Estado" />
+                     </columns>
+                  </TableView>
+                  <Button layoutX="762.0" layoutY="643.0" mnemonicParsing="false" onAction="#actTransContinuarAModificacion" text="Continuar" />
+                  <Label layoutX="64.0" layoutY="123.0" text="Transacciones del cliente" />
+                  <Label layoutX="64.0" layoutY="157.0" text="Seleccione la transacción a modificar y presione el botón Continuar" />
+                  <Button layoutX="64.0" layoutY="643.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="actTransGarantias" prefHeight="700.0" prefWidth="878.0">
+               <children>
+                  <Label layoutX="83.0" layoutY="85.0" text="Actualizar garantías">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="83.0" layoutY="167.0" text="Garantías">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="174.0" layoutY="168.0" mnemonicParsing="false" onAction="#nuevaGarantiaRegTrans" text="Nueva garantía" />
+                  <Label fx:id="lblActTransClienteSinGarantias" layoutX="83.0" layoutY="203.0" text="El cliente no tiene garantías registradas" />
+                  <HBox fx:id="hbxActTransGarantiasAñadidas" layoutX="87.0" layoutY="484.0" spacing="10.0">
+                     <children>
+                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Garantias de la transacción: Presione borrar para reiniciar las garantías y añadir los cambios." />
+                        <Button mnemonicParsing="false" onAction="#actTransBorrarGarantiaListView" text="Borrar" />
+                     </children>
+                  </HBox>
+                  <VBox fx:id="vbxActTransTableGarantias" layoutX="83.0" layoutY="220.0" prefHeight="251.0" prefWidth="712.0" spacing="3.0">
+                     <children>
+                        <Label text="Seleccione una garantía y presione el botón añadir" />
+                        <Label text="Garantías del cliente:" />
+                        <TableView fx:id="tblActTransGarantias" prefWidth="712.0">
+                           <columns>
+                              <TableColumn fx:id="tblActTransGarantiasCod" prefWidth="74.0" text="Código" />
+                              <TableColumn fx:id="tblActTransGarantiasTipo" prefWidth="155.0" text="Tipo" />
+                              <TableColumn fx:id="tblActTransGarantiasValor" prefWidth="188.0" text="Valor" />
+                              <TableColumn fx:id="tblActTransGarantiasUbicacion" prefWidth="294.0" text="Ubicación" />
+                           </columns>
+                        </TableView>
+                        <Button mnemonicParsing="false" onAction="#actTransAñadirGarantiaListView" text="Añadir" />
+                     </children>
+                  </VBox>
+                  <Button layoutX="769.0" layoutY="635.0" mnemonicParsing="false" onAction="#acTransContinuarAFiador" text="Continuar" />
+                  <Button layoutX="83.0" layoutY="635.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
+                  <Button layoutX="281.0" layoutY="169.0" mnemonicParsing="false" onAction="#refrescarTblActTransGarantias" text="Refrescar" />
+                  <ListView fx:id="lsvActTransGarantiasAñadidas" layoutX="87.0" layoutY="509.0" prefHeight="104.0" prefWidth="708.0" />
                </children>
             </AnchorPane>
          </children>

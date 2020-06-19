@@ -21,6 +21,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -402,8 +403,7 @@ public class TransControlador implements Initializable {
 		}
 			
 		//Muestra el pane de Soportes.
-		esconderPanesMenosIndicado(regTransSoportes);
-    	
+		esconderPanesMenosIndicado(regTransSoportes);    	
     }
     
     //Método que busca las garantías que un cliente tiene registradas.
@@ -482,7 +482,7 @@ public class TransControlador implements Initializable {
     @FXML
     public void cancelarAñadidasRegTrans(ActionEvent event) {
     	listaGarantiasAñadidas = new ArrayList<>();
-    	taGarantiasAñadidas.clear(); 	
+    	taGarantiasAñadidas.clear();
     }
         
     @FXML
@@ -836,7 +836,228 @@ public class TransControlador implements Initializable {
     	System.out.println(transSelected.toString());
     }
    
+    @FXML
+    private AnchorPane actTransCedula;
     
+    @FXML
+    private TextField txfActTransCedula;
+    
+    @FXML
+    private AnchorPane actTransBusqueda;
+
+    @FXML
+    private TableView<Transaccion> tblActTrans;
+
+    @FXML
+    private TableColumn<Transaccion, Integer> tblActTransCod;
+
+    @FXML
+    private TableColumn<Transaccion, Character> tblActTransTipo;
+
+    @FXML
+    private TableColumn<Transaccion, Double> tblActTransMonto;
+
+    @FXML
+    private TableColumn<Transaccion, LocalDate> tblActTransFechaIni;
+
+    @FXML
+    private TableColumn<Transaccion, String> tblActTransEstado;    
+    
+    ObservableList<Transaccion> listaTransaccionesAct;
+    
+
+    @FXML
+    private AnchorPane actTransGarantias;
+
+    @FXML
+    private Label lblActTransClienteSinGarantias;
+
+    @FXML
+    private HBox hbxActTransGarantiasAñadidas;
+
+    @FXML
+    private VBox vbxActTransTableGarantias;
+
+    @FXML
+    private TableView<Garantia> tblActTransGarantias;
+
+    @FXML
+    private TableColumn<Garantia, Integer> tblActTransGarantiasCod;
+
+    @FXML
+    private TableColumn<Garantia, String> tblActTransGarantiasTipo;
+
+    @FXML
+    private TableColumn<Garantia, String> tblActTransGarantiasValor;
+
+    @FXML
+    private TableColumn<Garantia, String> tblActTransGarantiasUbicacion;
+    
+    @FXML
+    private ListView<Garantia> lsvActTransGarantiasAñadidas;
+    
+    ObservableList<Garantia> listaGarantiasAct;
+    ObservableList<Garantia> listaGarantiasTrans;
+    
+  
+    @FXML
+    public void entrarActReg(ActionEvent event) {
+    	objTransaccion = new Transaccion();
+    	esconderPanesMenosIndicado(actTransCedula);
+    }
+    
+    @FXML
+    public void actTransContinuarABusqueda(ActionEvent event) throws SQLException {
+
+    	ResultSet clienteConsulta = controlGeneral.ejecutarSentencia("SELECT * from cliente WHERE cedula like '" + txfActTransCedula.getText() +"';");
+    	if(clienteConsulta.next()) {
+    		String cedulaConsulta = clienteConsulta.getString("cedula");    		
+    		try {
+    			
+    			listaTransaccionesAct=buscarTransacciones(cedulaConsulta);
+    		
+	    		if(!listaTransaccionesAct.isEmpty()) {
+	    			tblActTransCod.setCellValueFactory(new PropertyValueFactory<>("codTrans"));
+	    			tblActTransTipo.setCellValueFactory(new PropertyValueFactory<>("tipoTrans"));
+	    			tblActTransMonto.setCellValueFactory(new PropertyValueFactory<>("montoTrans"));
+	    			tblActTransFechaIni.setCellValueFactory(new PropertyValueFactory<>("fechaIniciacion"));
+	    			tblActTransEstado.setCellValueFactory(new PropertyValueFactory<>("estadoSolicitud"));  
+		        	
+	    			tblActTrans.setItems(listaTransaccionesAct);
+	    		}
+    		}catch(Exception e) {
+    			System.out.println(e.toString());
+    		}
+        	
+        	esconderPanesMenosIndicado(actTransBusqueda);
+    	}
+    	else {
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "Cédula incorrecta", "Cliente no encontrado", "No se encontraron registros del cliente en el sistema.");
+    	}
+    }
+    
+    @FXML
+    public void actTransContinuarAModificacion(ActionEvent event) throws SQLException{
+    	
+    	if(tblActTrans.getSelectionModel().getSelectedItem()==null) {
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "ERROR: Actualizar transacción", "No se seleccionó transacción",
+    				"Por favor elija una de las transacciones de la tabla y presione continuar");
+    	return;
+    	}
+    	
+    	this.objTransaccion = new Transaccion();
+    	this.objTransaccion = tblActTrans.getSelectionModel().getSelectedItem();
+    	
+    	if(this.objTransaccion.getTipoTrans()=='P') {    		
+	    	mostrarGarantiasActTrans();
+	    	this.listaGarantiasTrans = buscarGarantiasTrans(this.objTransaccion.getCodTrans());
+	    	this.lsvActTransGarantiasAñadidas.setItems(this.listaGarantiasTrans);
+    	}
+    }
+    
+    public void mostrarGarantiasActTrans() {
+
+    	//Consultar si el cliente asociado tiene garantías.
+    	String buscarGarantias = "SELECT  garantias.* FROM garantias JOIN cliente ON clientegarantia=cedula WHERE cedula like '"
+    	+ this.objTransaccion.getClienteTrans()+"';";
+    	ResultSet garantias = controlGeneral.ejecutarSentencia(buscarGarantias); 
+		
+		//Si el cliente tiene garantías se definen las columnas en las tablas. Después, se muestran los resultados.
+		try {
+    		if(garantias.next()) {
+    			//Los panes de la información de las garantías se vuelven visibles.
+    			vbxActTransTableGarantias.setVisible(true);
+    			lsvActTransGarantiasAñadidas.setVisible(true);
+    			lblActTransClienteSinGarantias.setVisible(false);
+    			hbxActTransGarantiasAñadidas.setVisible(true);
+    			
+    			//Se definen las columnas de la tabla.
+    			tblActTransGarantiasCod.setCellValueFactory(new PropertyValueFactory<>("codGarantia"));
+    			tblActTransGarantiasTipo.setCellValueFactory(new PropertyValueFactory<>("tipoGarantia"));
+    			tblActTransGarantiasValor.setCellValueFactory(new PropertyValueFactory<>("valorGarantia"));
+    			tblActTransGarantiasUbicacion.setCellValueFactory(new PropertyValueFactory<>("ubiGarantia"));    			    		
+    			
+    			//Buscar garantías retorna un ObservableList<> con las garantías del usuario.
+    			listaGarantiasAct = buscarGarantias(this.objTransaccion.getClienteTrans());
+    			//Se agrega esa lista de garantías a la tabla.
+    			tblActTransGarantias.setItems(listaGarantiasAct);
+    		}
+		}catch(Exception e) {
+			System.out.println(e.getLocalizedMessage());
+		}
+			
+		//Muestra el pane de Garantias
+		esconderPanesMenosIndicado(actTransGarantias);
+    	   	
+    }
+       
+    public ObservableList<Garantia> buscarGarantiasTrans(int codTrans) throws SQLException{
+    	
+    	ObservableList<Garantia> listaGarantiasTrans = FXCollections.observableArrayList();
+    	codTrans = this.objTransaccion.getCodTrans();
+    	String buscarGarantia = "select * from transacciones join prestamos on codtrans=codprestamo "
+    			+ "natural join garantias_prestamo natural join garantias where codtrans="+codTrans+";";
+    	ResultSet garantiasRS = controlGeneral.ejecutarSentencia(buscarGarantia);
+    	
+    	while(garantiasRS.next()) {
+        	Garantia objGarantiaRS = new Garantia(garantiasRS.getInt("codGarantia"),garantiasRS.getString("clienteGarantia"),garantiasRS.getString("tipoGarantia"),
+        			garantiasRS.getString("valorGarantia"),garantiasRS.getString("ubiGarantia"));
+        	listaGarantiasTrans.add(objGarantiaRS);
+        	}    	
+    	return listaGarantiasTrans;    	
+    }
+    
+    @FXML
+    public void refrescarTblActTransGarantias() {
+    	mostrarGarantiasActTrans();
+    }
+    
+    @FXML
+    public void actTransAñadirGarantiaListView(ActionEvent event) throws SQLException {
+    	if(tblActTransGarantias.getSelectionModel().getSelectedItem()==null) {
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "ERROR: Garantia no seleccionada", "Garantía no seleccionada",
+    				"Por favor seleccione una garantía de la tabla y presione Añadir");
+    		return;
+    	}
+    	
+    	Garantia garantiaAñadida = tblActTransGarantias.getSelectionModel().getSelectedItem();    	
+    	for(int i=0;i<this.listaGarantiasTrans.size();i++) {    		
+    		if(garantiaAñadida.getCodGarantia()==listaGarantiasTrans.get(i).getCodGarantia()) {
+    			return;
+    		}
+    	}
+    	this.listaGarantiasTrans.add(garantiaAñadida);
+		this.lsvActTransGarantiasAñadidas.setItems(this.listaGarantiasTrans);    	
+    }
+    
+    @FXML
+    public void actTransBorrarGarantiaListView(ActionEvent event) {
+    	if(this.lsvActTransGarantiasAñadidas.getSelectionModel().getSelectedItem()==null) {
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "ERROR: Garantia no seleccionada", "Garantía no seleccionada",
+    				"Por favor seleccione una garantía de la lista para borrarla.");
+    		return;
+    	}
+    	
+    	Garantia garantiaABorrar = this.lsvActTransGarantiasAñadidas.getSelectionModel().getSelectedItem();
+    	this.listaGarantiasTrans.remove(garantiaABorrar);
+    	this.lsvActTransGarantiasAñadidas.setItems(this.listaGarantiasTrans);   	
+    }
+    
+    @FXML
+    public void acTransContinuarAFiador(ActionEvent event) {
+    	actTransUpdateGarantias();
+    }
+    
+    public void actTransUpdateGarantias() {
+    	
+    	String deleteTodasGarantias = "delete from garantias_prestamo where codprestamo="+this.objTransaccion.getCodTrans()+";";
+    	controlGeneral.ejecutarSentenciaInsert(deleteTodasGarantias);
+    	
+    	this.listaGarantiasTrans.forEach(garantia ->{
+    		String updateGarantia = "insert into garantias_prestamo values("+garantia.getCodGarantia()+","+this.objTransaccion.getCodTrans()+");";
+    		controlGeneral.ejecutarSentenciaInsert(updateGarantia);
+    	});
+    }
     
     
     //Metodos generales.

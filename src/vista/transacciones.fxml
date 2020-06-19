@@ -153,7 +153,6 @@
                         <Font size="26.0" />
                      </font>
                   </Label>
-                  <Button layoutX="237.0" layoutY="289.0" mnemonicParsing="false" text="Buscar" />
                   <Button layoutX="68.0" layoutY="639.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
                   <Button layoutX="760.0" layoutY="639.0" mnemonicParsing="false" onAction="#finalizarRegTransPrestamo" text="Finalizar" />
                </children>
@@ -279,7 +278,7 @@
                   <Button layoutX="64.0" layoutY="643.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="actTransGarantias" prefHeight="700.0" prefWidth="878.0">
+            <AnchorPane fx:id="actTransGarantias" prefHeight="700.0" prefWidth="878.0" visible="false">
                <children>
                   <Label layoutX="83.0" layoutY="85.0" text="Actualizar garantías">
                      <font>
@@ -314,10 +313,29 @@
                         <Button mnemonicParsing="false" onAction="#actTransAñadirGarantiaListView" text="Añadir" />
                      </children>
                   </VBox>
-                  <Button layoutX="769.0" layoutY="635.0" mnemonicParsing="false" onAction="#acTransContinuarAFiador" text="Continuar" />
+                  <Button layoutX="769.0" layoutY="635.0" mnemonicParsing="false" onAction="#actTransContinuarAFiador" text="Continuar" />
                   <Button layoutX="83.0" layoutY="635.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
                   <Button layoutX="281.0" layoutY="169.0" mnemonicParsing="false" onAction="#refrescarTblActTransGarantias" text="Refrescar" />
                   <ListView fx:id="lsvActTransGarantiasAñadidas" layoutX="87.0" layoutY="509.0" prefHeight="104.0" prefWidth="708.0" />
+                  <Button layoutX="691.0" layoutY="635.0" mnemonicParsing="false" onAction="#actTransUpdateGarantias" text="Guardar" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="actTransFiador" prefHeight="700.0" prefWidth="878.0" visible="false">
+               <children>
+                  <Label layoutX="76.0" layoutY="230.0" text="Fiador">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="74.0" layoutY="266.0" text="Cédula del fiador" />
+                  <TextField fx:id="txfActTransFiador" layoutX="76.0" layoutY="289.0" onKeyPressed="#validarInputEnteroSinLimite" />
+                  <Label layoutX="76.0" layoutY="93.0" text="Actualizar fiador">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="68.0" layoutY="639.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
+                  <Button layoutX="760.0" layoutY="639.0" mnemonicParsing="false" onAction="#actTransUpdateFiador" text="Guardar" />
                </children>
             </AnchorPane>
          </children>

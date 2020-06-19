@@ -73,8 +73,8 @@ public class Garantia {
 
 	@Override
 	public String toString() {
-		return "Garantia [codGarantia=" + codGarantia + ", clienteGarantia=" + clienteGarantia + ", tipoGarantia="
-				+ tipoGarantia + ", valorGarantia=" + valorGarantia + ", ubiGarantia=" + ubiGarantia + "]";
+		return "COD: " + this.codGarantia + " - TIPO: " + this.tipoGarantia.toUpperCase() + " - VALOR: $" + this.valorGarantia.toUpperCase() +
+				" - UBICACIÓN: " + this.ubiGarantia.toUpperCase();
 	}
 	
 	public String mostrarGarantia() {

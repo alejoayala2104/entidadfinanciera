@@ -1,6 +1,7 @@
 package controlador;
 
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,10 +9,16 @@ import java.sql.Statement;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import modelo.Conexion;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
@@ -257,6 +264,14 @@ public class ClientesControlador {
 		//Se cierra la sentencia.
 		sentencia.close();
 	}
-
 	
+	@FXML    
+    public void entrarHome(ActionEvent event) throws IOException {
+    	Parent home = FXMLLoader.load(getClass().getResource("/vista/home.fxml"));
+		Scene homeScene = new Scene(home);
+		Window nodo = ((Node) event.getSource()).getScene().getWindow();
+		Stage ventana = (Stage)(nodo);
+		ventana.setScene(homeScene);
+		ventana.show();
+    }
 }

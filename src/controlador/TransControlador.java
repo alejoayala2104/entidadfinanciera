@@ -899,6 +899,13 @@ public class TransControlador implements Initializable {
     ObservableList<Garantia> listaGarantiasAct;
     ObservableList<Garantia> listaGarantiasTrans;
     
+    
+    @FXML
+    private AnchorPane actTransFiador;
+
+    @FXML
+    private TextField txfActTransFiador;
+    
   
     @FXML
     public void entrarActReg(ActionEvent event) {
@@ -953,8 +960,11 @@ public class TransControlador implements Initializable {
 	    	this.listaGarantiasTrans = buscarGarantiasTrans(this.objTransaccion.getCodTrans());
 	    	this.lsvActTransGarantiasAñadidas.setItems(this.listaGarantiasTrans);
     	}
+    	else {
+    		
+    	}
     }
-    
+      
     public void mostrarGarantiasActTrans() {
 
     	//Consultar si el cliente asociado tiene garantías.
@@ -1044,10 +1054,11 @@ public class TransControlador implements Initializable {
     }
     
     @FXML
-    public void acTransContinuarAFiador(ActionEvent event) {
-    	actTransUpdateGarantias();
+    public void actTransContinuarAFiador(ActionEvent event) {    	
+    	esconderPanesMenosIndicado(actTransFiador);
     }
     
+    @FXML
     public void actTransUpdateGarantias() {
     	
     	String deleteTodasGarantias = "delete from garantias_prestamo where codprestamo="+this.objTransaccion.getCodTrans()+";";
@@ -1057,6 +1068,30 @@ public class TransControlador implements Initializable {
     		String updateGarantia = "insert into garantias_prestamo values("+garantia.getCodGarantia()+","+this.objTransaccion.getCodTrans()+");";
     		controlGeneral.ejecutarSentenciaInsert(updateGarantia);
     	});
+    	
+    	controlGeneral.mostrarAlerta(AlertType.INFORMATION, "Garantias guardadas", "Garantías modificadas exitosamente", null);
+    }
+    
+    @FXML
+    public void actTransUpdateFiador() throws SQLException {
+    	
+    	//Validar si el fiador ingresado en el textfield existe.
+    	this.fiadorOK = controlGeneral.validarCliente(txfActTransFiador);
+    	String cedulaFiador = txfActTransFiador.getText(); 
+		if(fiadorOK==false) {
+			controlGeneral.mostrarAlerta(AlertType.ERROR, "Fiador inválido", "Fiador no encontrado", null);
+			return;
+		}		
+		else if(this.objTransaccion.getClienteTrans().equals(cedulaFiador)) {
+			controlGeneral.mostrarAlerta(AlertType.ERROR, "Fiador inválido", "El fiador no puede ser el mismo cliente de la transacción", null);
+			return;
+		}
+		else {
+			   	
+	    	String updateFiador ="update prestamos set fiador= "+cedulaFiador+" where codprestamo = "+this.objTransaccion.getCodTrans()+"; ";
+	    	controlGeneral.ejecutarSentenciaInsert(updateFiador);
+	    	controlGeneral.mostrarAlerta(AlertType.INFORMATION, "Fiador guardado", "Fiador modificado exitosamente", null);
+		}
     }
     
     

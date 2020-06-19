@@ -143,6 +143,7 @@
                   <Image url="@icon/empresa_logo.png" />
                </image>
             </ImageView>
+            <Button layoutX="19.0" layoutY="35.0" mnemonicParsing="false" onAction="#entrarHome" prefHeight="35.0" prefWidth="112.0" style="-fx-background-color: white;" text="Inicio" />
          </children>
       </Pane>
    </right>

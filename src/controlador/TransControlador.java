@@ -1262,6 +1262,17 @@ public class TransControlador implements Initializable {
 	}
 	
 	
+	@FXML
+	private void abrirClientesOtraVentana(ActionEvent event) throws IOException {
+		
+		Parent interfazClientes = FXMLLoader.load(getClass().getResource("/vista/clientes.fxml"));
+		Scene escenaClientes = new Scene(interfazClientes);
+		Stage ventana = new Stage();
+		ventana.setScene(escenaClientes);
+		ventana.show();
+	}
+	
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		//Panel de Bienvenida
@@ -1284,8 +1295,7 @@ public class TransControlador implements Initializable {
 		lblRegTransClienteSinCuentas.setVisible(true);
 		
 		vbxActTransCuentas.setVisible(false);
-		lblActTransClienteSinCuentas.setVisible(true);
-		
+		lblActTransClienteSinCuentas.setVisible(true);		
 	
 	}
 

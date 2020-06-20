@@ -103,16 +103,4 @@ public class ControladorGeneral {
 		alerta.showAndWait();		
 	}
 	
-	@FXML
-	private void abrirClientesOtraVentana(ActionEvent event) throws IOException {
-		
-		Parent interfazClientes = FXMLLoader.load(getClass().getResource("/vista/clientes.fxml"));
-		Scene escenaClientes = new Scene(interfazClientes);
-//		Window nodo = ((Node) event.getSource()).getScene().getWindow();
-		Stage ventana = new Stage();
-		ventana.setScene(escenaClientes);
-		ventana.show();
-	}
-		
-	
 }

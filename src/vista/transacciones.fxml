@@ -54,12 +54,13 @@
       <StackPane fx:id="stpCenter" prefHeight="700.0" prefWidth="878.0" BorderPane.alignment="CENTER">
          <children>
             <Label fx:id="regTransBienvenido" text="Bienvenido!" visible="false" />
-            <AnchorPane fx:id="regTransCedula" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="878.0" visible="false">
+            <AnchorPane fx:id="regTransCedula" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="878.0">
                <children>
                   <Label layoutX="164.0" layoutY="294.0" text="Cedula del cliente" />
                   <TextField fx:id="txfRegTransCedula" layoutX="164.0" layoutY="315.0" onKeyPressed="#validarInputEnteroSinLimite" />
                   <Button layoutX="162.0" layoutY="357.0" mnemonicParsing="false" text="¿Cliente nuevo?" visible="false" />
                   <Button fx:id="btnContinuarATipoTrans" layoutX="745.0" layoutY="626.0" mnemonicParsing="false" onAction="#continuarATipoTransaccion" text="Continuar" />
+                  <Button layoutX="164.0" layoutY="390.0" mnemonicParsing="false" onAction="#abrirClientesOtraVentana" text="Registrar cliente" />
                </children>
             </AnchorPane>
             <AnchorPane fx:id="regTransTipo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="878.0" visible="false">
@@ -139,7 +140,7 @@
                   <Button layoutX="281.0" layoutY="169.0" mnemonicParsing="false" onAction="#refrescarTableRegTransGarantias" text="Refrescar" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="regTransSoportesFiador" prefHeight="700.0" prefWidth="878.0" visible="false">
+            <AnchorPane fx:id="regTransSoportesFiador" prefHeight="700.0" prefWidth="878.0">
                <children>
                   <Label layoutX="76.0" layoutY="230.0" text="Fiador">
                      <font>
@@ -155,6 +156,7 @@
                   </Label>
                   <Button layoutX="68.0" layoutY="639.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
                   <Button layoutX="760.0" layoutY="639.0" mnemonicParsing="false" onAction="#finalizarRegTransPrestamo" text="Finalizar" />
+                  <Button layoutX="75.0" layoutY="344.0" mnemonicParsing="false" onAction="#abrirClientesOtraVentana" text="Registrar cliente" />
                </children>
             </AnchorPane>
             <AnchorPane fx:id="regTransInfoPago" prefHeight="200.0" prefWidth="200.0" visible="false">
@@ -338,7 +340,7 @@
                   <Button layoutX="760.0" layoutY="639.0" mnemonicParsing="false" onAction="#actTransUpdateFiador" text="Guardar" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="actTransInfoPago" prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane fx:id="actTransInfoPago" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <Label layoutX="66.0" layoutY="76.0" text="Información de pago">
                      <font>

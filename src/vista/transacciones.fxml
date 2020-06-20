@@ -350,8 +350,8 @@
                         <Font size="26.0" />
                      </font>
                   </Label>
-                  <Button layoutX="269.0" layoutY="186.0" mnemonicParsing="false" onAction="#nuevaCuentaBancariaRegTrans" text="Nueva cuenta" />
-                  <Button layoutX="373.0" layoutY="186.0" mnemonicParsing="false" onAction="#refrescarTblActTransCuentas" text="Refrescar" />
+                  <Button layoutX="269.0" layoutY="186.0" mnemonicParsing="false" onAction="#nuevaCuentaBancariaRegTrans" text="Registrar cuenta" />
+                  <Button layoutX="374.0" layoutY="186.0" mnemonicParsing="false" onAction="#refrescarTblActTransCuentas" text="Refrescar" />
                   <Label fx:id="lblActTransClienteSinCuentas" layoutX="66.0" layoutY="232.0" text="El cliente no ha registrado cuentas bancarias" visible="false">
                      <font>
                         <Font size="18.0" />

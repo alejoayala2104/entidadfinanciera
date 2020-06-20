@@ -1,16 +1,24 @@
 package controlador;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import modelo.Conexion;
 
 public class ControladorGeneral {
@@ -95,6 +103,16 @@ public class ControladorGeneral {
 		alerta.showAndWait();		
 	}
 	
-	
+	@FXML
+	private void abrirClientesOtraVentana(ActionEvent event) throws IOException {
+		
+		Parent interfazClientes = FXMLLoader.load(getClass().getResource("/vista/clientes.fxml"));
+		Scene escenaClientes = new Scene(interfazClientes);
+//		Window nodo = ((Node) event.getSource()).getScene().getWindow();
+		Stage ventana = new Stage();
+		ventana.setScene(escenaClientes);
+		ventana.show();
+	}
+		
 	
 }

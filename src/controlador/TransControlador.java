@@ -568,7 +568,7 @@ public class TransControlador implements Initializable {
     	}
     	
     	if(!(listaGarantiasAñadidas.isEmpty()) && fiadorOK)
-    		objTransaccion.setEstadoSolicitud("PENDIENTE");
+    		objTransaccion.setEstadoSolicitud("PARA EVALUAR");
     	
     	//Se crea la transacción en la base de datos y se obtiene el código generado del autoincremento.
      	ResultSet codTransGenerado = insertarTransaccion();
@@ -605,14 +605,14 @@ public class TransControlador implements Initializable {
     	
     	//Validación de cuenta bancaria obligatorioa.
     	if(objInversion.getCuentaPagoGeneral()==null) {
-    		controlGeneral.mostrarAlerta(AlertType.ERROR, "Cuenta bancaria inválida", "Cuenta bancaria necesaria",
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "Cuenta bancaria inválida", "Cuenta bancaria obligatoria",
     				"Es obligatorio asociar una cuenta bancaria a la inversión.");
     		return;
     	}
     	
     	//Dado que el anterior if no permite seguir hasta que se haya asociado una cuenta bancaria,
     	//la siguiente linea cambia el estado de la transacción a pendiente como si estuviese completa antes de la inserción a la bd.
-    	objTransaccion.setEstadoSolicitud("PENDIENTE");
+    	objTransaccion.setEstadoSolicitud("PARA EVALUAR");
     	
     	//Inserta la transacción en la base de datos y obtiene la key generada.
     	ResultSet codTransGenerado = insertarTransaccion();

@@ -338,6 +338,49 @@
                   <Button layoutX="760.0" layoutY="639.0" mnemonicParsing="false" onAction="#actTransUpdateFiador" text="Guardar" />
                </children>
             </AnchorPane>
+            <AnchorPane fx:id="actTransInfoPago" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="66.0" layoutY="76.0" text="Información de pago">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="66.0" layoutY="179.0" text="Cuenta bancaria">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="269.0" layoutY="186.0" mnemonicParsing="false" onAction="#nuevaCuentaBancariaRegTrans" text="Nueva cuenta" />
+                  <Button layoutX="373.0" layoutY="186.0" mnemonicParsing="false" onAction="#refrescarTblActTransCuentas" text="Refrescar" />
+                  <Label fx:id="lblActTransClienteSinCuentas" layoutX="66.0" layoutY="232.0" text="El cliente no ha registrado cuentas bancarias" visible="false">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <VBox fx:id="vbxActTransCuentas" layoutX="66.0" layoutY="232.0" prefHeight="381.0" prefWidth="759.0" spacing="10.0">
+                     <children>
+                        <Label text="Cuentas del cliente">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label text="Seleccione una cuenta y presione el botón asociar" />
+                        <TableView fx:id="tblActTransCuentas" prefHeight="163.0" prefWidth="759.0">
+                           <columns>
+                              <TableColumn fx:id="tblColActTransCuentasNumCuenta" prefWidth="208.0" text="Número de cuenta" />
+                              <TableColumn fx:id="tblColActTransCuentasBanco" minWidth="0.0" prefWidth="332.0" text="Banco" />
+                              <TableColumn fx:id="tblColActTransCuentasTipoCuenta" prefWidth="217.0" text="Tipo de cuenta" />
+                           </columns>
+                        </TableView>
+                        <Button mnemonicParsing="false" onAction="#actTransAsociarCuentaTextField" text="Asociar" />
+                        <Label text="Cuenta asociada" />
+                        <TextField fx:id="txfActTransCuentaAsociada" />
+                     </children>
+                  </VBox>
+                  <Button layoutX="747.0" layoutY="639.0" mnemonicParsing="false" onAction="#actTransUpdateCuentaAsociada" text="Guardar" />
+                  <Button layoutX="66.0" layoutY="639.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
+               </children>
+            </AnchorPane>
          </children>
       </StackPane>
    </center>

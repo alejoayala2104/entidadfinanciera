@@ -906,9 +906,40 @@ public class TransControlador implements Initializable {
     @FXML
     private TextField txfActTransFiador;
     
+    
+    
+    @FXML
+    private AnchorPane actTransInfoPago;
+
+    @FXML
+    private Label lblActTransClienteSinCuentas;
+
+    @FXML
+    private VBox vbxActTransCuentas;
+
+    @FXML
+    private TableView<CuentaBancaria> tblActTransCuentas;
+
+    @FXML
+    private TableColumn<CuentaBancaria, String> tblColActTransCuentasNumCuenta;
+
+    @FXML
+    private TableColumn<CuentaBancaria, String> tblColActTransCuentasBanco;
+
+    @FXML
+    private TableColumn<CuentaBancaria, String> tblColActTransCuentasTipoCuenta;
+
+    @FXML
+    private TextField txfActTransCuentaAsociada;
+    
+    CuentaBancaria actTransCuentaAsociada = new CuentaBancaria();
+    
+    ObservableList<CuentaBancaria> listaCuentasAct;
+    
   
     @FXML
     public void entrarActReg(ActionEvent event) {
+    	txfActTransCedula.clear();
     	objTransaccion = new Transaccion();
     	esconderPanesMenosIndicado(actTransCedula);
     }
@@ -961,8 +992,41 @@ public class TransControlador implements Initializable {
 	    	this.lsvActTransGarantiasAñadidas.setItems(this.listaGarantiasTrans);
     	}
     	else {
-    		
+    		mostrarCuentasActTrans();
+    		this.actTransCuentaAsociada = buscarCuentaBancariaTrans(this.objTransaccion.getCodTrans());
+        	txfActTransCuentaAsociada.setText(this.actTransCuentaAsociada.mostrarCuentaBancaria());
     	}
+    }
+    
+    public void mostrarCuentasActTrans() {
+    	String buscarCuentasBanc = "SELECT cuentasbancarias.* FROM cliente join cuentasbancarias ON"
+    			+ " clientecuenta=cedula where cedula like '"+this.objTransaccion.getClienteTrans()+"';";
+    	ResultSet cuentasBancarias = controlGeneral.ejecutarSentencia(buscarCuentasBanc);
+    	
+    	try {
+    		if(cuentasBancarias.next()) {
+    			//Se muestra el Vbox de las cuentas disponibles, y se esconde el mensaje de que el cliente no tiene cuentas.
+    			vbxActTransCuentas.setVisible(true);
+    			lblActTransClienteSinCuentas.setVisible(false);
+    			
+    			//Se definen las columnas de la tabla.
+    			tblColActTransCuentasNumCuenta.setCellValueFactory(new PropertyValueFactory<>("numCuentaBanc"));
+    			tblColActTransCuentasBanco.setCellValueFactory(new PropertyValueFactory<>("bancoCuentaBanc"));
+    			tblColActTransCuentasTipoCuenta.setCellValueFactory(new PropertyValueFactory<>("tipoCuentaBanc"));
+    			
+    			//Buscar las cuentas
+    			this.listaCuentasAct = buscarCuentasBancarias(this.objTransaccion.getClienteTrans());
+    			//Se agregan los resultados a la tabla
+    			tblActTransCuentas.setItems(this.listaCuentasAct);
+    		}
+    		
+    	}catch(Exception e) {
+    		System.out.println(e.getLocalizedMessage());
+    	}
+    	
+    	//Muestra el pane de Información de Pago.
+    	esconderPanesMenosIndicado(actTransInfoPago);    	
+    	
     }
       
     public void mostrarGarantiasActTrans() {
@@ -1017,10 +1081,50 @@ public class TransControlador implements Initializable {
     	return listaGarantiasTrans;    	
     }
     
+    public CuentaBancaria buscarCuentaBancariaTrans(int codTrans) throws SQLException {
+    	CuentaBancaria cuentaBancariaAsociada = new CuentaBancaria();    	
+    	String buscarCuenta = "select * from transacciones join inversiones on codtrans=codinversion"
+    			+ " join cuentasbancarias on cuentapagogeneral=numcuentabanc where codtrans="+codTrans+";";
+    	ResultSet cuentaRS = controlGeneral.ejecutarSentencia(buscarCuenta);
+    	
+    	while(cuentaRS.next()) {
+    		cuentaBancariaAsociada = new CuentaBancaria(cuentaRS.getString("numcuentabanc"),cuentaRS.getString("clientecuenta"),
+    				cuentaRS.getString("bancocuentabanc"), cuentaRS.getString("tipocuentabanc"));
+    	}
+    	
+    	return cuentaBancariaAsociada;
+    }
+    
     @FXML
     public void refrescarTblActTransGarantias() {
     	mostrarGarantiasActTrans();
     }
+    
+    @FXML
+    public void refrescarTblActTransCuentas() {
+    	mostrarCuentasActTrans();
+    }
+    
+    @FXML
+    public void actTransAsociarCuentaTextField(ActionEvent event) throws SQLException {
+    	if(tblActTransCuentas.getSelectionModel().getSelectedItem()==null) {
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "ERROR: Cuenta no seleccionada", "Cuenta no seleccionada",
+    				"Por favor seleccione una cuenta de la tabla y presione Asociar");
+    		return;
+    	}
+    	
+    	this.actTransCuentaAsociada = tblActTransCuentas.getSelectionModel().getSelectedItem();
+    	txfActTransCuentaAsociada.setText(this.actTransCuentaAsociada.mostrarCuentaBancaria());
+    }
+    
+    @FXML
+    public void actTransUpdateCuentaAsociada(ActionEvent event) {
+    	
+    	String updateCuenta = "update inversiones set cuentapagogeneral = '"+this.actTransCuentaAsociada.getNumCuentaBanc()+"' where codinversion="+this.objTransaccion.getCodTrans()+";";
+    	controlGeneral.ejecutarSentenciaInsert(updateCuenta);    	
+    	controlGeneral.mostrarAlerta(AlertType.INFORMATION, "Cuenta actualizada", "Cuenta bancaria actualizada exitosamente", null);
+    }
+    
     
     @FXML
     public void actTransAñadirGarantiaListView(ActionEvent event) throws SQLException {
@@ -1145,6 +1249,9 @@ public class TransControlador implements Initializable {
 		
 		if(actual.equals(regTransInfoPago)) {
 			esconderPanesMenosIndicado(regTransSimulacion);
+		}
+		else if(actual.equals(actTransInfoPago)){
+			esconderPanesMenosIndicado(actTransBusqueda);
 		}else {
 			ObservableList<Node> hijos = stpCenter.getChildren();
 			for(int i=0; i<hijos.size();i++) {
@@ -1175,6 +1282,9 @@ public class TransControlador implements Initializable {
 		//Se esconde el VBox que contiene la info de las cuentas bancarias del cliente.
 		vbxRegTransInfoPago.setVisible(false);
 		lblRegTransClienteSinCuentas.setVisible(true);
+		
+		vbxActTransCuentas.setVisible(false);
+		lblActTransClienteSinCuentas.setVisible(true);
 		
 	
 	}

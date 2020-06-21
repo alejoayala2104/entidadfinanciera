@@ -1,10 +1,10 @@
 @font-face {
-	fx-font-family: "Lato";
-    src: url("Lato-Regular.ttf");
+	fx-font-family: 'Roboto Regular';
+    src: url(Roboto-Regular.ttf);
 }
 
 .root{
-	-fx-font-family: "Lato";	
+	-fx-font-family: 'Roboto Regular';	
 }
 
 .tab-pane *.tab-header-area *.tab-header-background {
@@ -37,11 +37,11 @@
 }
 
 .label{
-	-fx-font-family: "Lato";
-		-fx-font-size:16;
+	-fx-font-family: 'Roboto Regular';
+	-fx-font-size:16;
 }
 .labelTitulo{
-	-fx-font-family: "Lato";
+	-fx-font-family: 'Roboto Regular';
 	-fx-font-size:24;
 }
 

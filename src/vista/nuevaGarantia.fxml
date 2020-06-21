@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="360.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.NuevaGarantiaControlador">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="360.0" style="-fx-background-color: white;" stylesheets="@css/transacciones.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.NuevaGarantiaControlador">
    <children>
-      <Label layoutX="56.0" layoutY="57.0" text="Nueva garantía">
+      <Label layoutX="56.0" layoutY="57.0" style="-fx-font-size: 36;" styleClass="labelLight" stylesheets="@css/transacciones.css" text="Nueva garantía">
          <font>
             <Font size="26.0" />
          </font>
@@ -19,7 +19,7 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <ComboBox fx:id="cbxTipoNuevaGarantia" layoutX="56.0" layoutY="182.0" prefHeight="40.0" prefWidth="250.0" />
+      <ComboBox fx:id="cbxTipoNuevaGarantia" layoutX="56.0" layoutY="185.0" prefHeight="35.0" prefWidth="250.0" />
       <Label layoutX="56.0" layoutY="252.0" text="Valor">
          <font>
             <Font size="18.0" />
@@ -30,9 +30,9 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="txfValorNuevaGarantia" layoutX="57.0" layoutY="279.0" onKeyPressed="#validarInputEnteroSinLimite" prefHeight="40.0" prefWidth="250.0" />
-      <TextField fx:id="txfUbiNuevaGarantia" layoutX="57.0" layoutY="380.0" prefHeight="40.0" prefWidth="250.0" />
-      <Button layoutX="46.0" layoutY="454.0" mnemonicParsing="false" onAction="#guardarNuevaGarantia" prefHeight="40.0" prefWidth="120.0" text="Guardar" />
+      <TextField fx:id="txfValorNuevaGarantia" layoutX="57.0" layoutY="282.0" onKeyPressed="#validarInputEnteroSinLimite" prefHeight="35.0" prefWidth="250.0" />
+      <TextField fx:id="txfUbiNuevaGarantia" layoutX="57.0" layoutY="383.0" prefHeight="35.0" prefWidth="250.0" />
+      <Button layoutX="56.0" layoutY="454.0" mnemonicParsing="false" onAction="#guardarNuevaGarantia" prefHeight="40.0" prefWidth="120.0" text="Guardar" />
       <Button layoutX="186.0" layoutY="454.0" mnemonicParsing="false" onAction="#cancelarNuevaGarantia" prefHeight="40.0" prefWidth="120.0" text="Cancelar" />
    </children>
 </AnchorPane>

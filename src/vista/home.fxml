@@ -8,72 +8,72 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.HomeControlador">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1152.0" styleClass="background" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.HomeControlador">
    <children>
-      <HBox layoutX="96.0" layoutY="162.0" spacing="3.0">
+      <HBox layoutX="272.0" layoutY="286.0" spacing="3.0">
          <children>
-            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="110.0" prefWidth="100.0" spacing="10.0">
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
                <children>
-                  <Button alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#entrarClientes" prefHeight="75.0" prefWidth="100.0" styleClass="buttonMain">
+                  <Button alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#entrarClientes" prefHeight="125.0" prefWidth="150.0" styleClass="buttonMain">
                      <graphic>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                        <AnchorPane>
                            <children>
-                              <ImageView fx:id="clie_logo_view" fitHeight="50.0" fitWidth="50.0" layoutX="17.0" layoutY="9.0">
+                              <ImageView fx:id="clie_logo_view" fitHeight="100.0" fitWidth="100.0" layoutX="15.0" layoutY="7.0">
                                  <image>
                                     <Image url="@icon/clie_logo.png" />
                                  </image>
                               </ImageView>
                            </children></AnchorPane>
                      </graphic></Button>
-                  <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-size: 14;" text="Clientes" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-size: 20;" text="Clientes" />
                </children>
             </VBox>
-            <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="110.0" prefWidth="100.0" spacing="10.0">
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" spacing="10.0">
                <children>
-                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#entrarTrans" prefHeight="75.0" prefWidth="100.0" styleClass="buttonMain">
+                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#entrarTrans" prefHeight="125.0" prefWidth="150.0" styleClass="buttonMain">
                      <graphic>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                        <AnchorPane>
                            <children>
-                              <ImageView fx:id="trans_logo_view" fitHeight="50.0" fitWidth="50.0" layoutX="17.0" layoutY="9.0">
+                              <ImageView fx:id="trans_logo_view" fitHeight="100.0" fitWidth="100.0" layoutX="17.0" layoutY="11.0">
                                  <image>
                                     <Image url="@icon/trans_logo.png" />
                                  </image>
                               </ImageView>
                            </children></AnchorPane>
                      </graphic></Button>
-                  <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-size: 14;" text="Transacciones" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-size: 20;" text="Transacciones" />
                </children>
             </VBox>
-            <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="110.0" prefWidth="100.0" spacing="10.0">
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" spacing="10.0">
                <children>
-                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="75.0" prefWidth="100.0" styleClass="buttonMain">
+                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="125.0" prefWidth="150.0" styleClass="buttonMain">
                      <graphic>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                        <AnchorPane>
                            <children>
-                              <ImageView fx:id="eval_logo_view" fitHeight="46.0" fitWidth="45.0" layoutX="20.0" layoutY="11.0">
+                              <ImageView fx:id="eval_logo_view" layoutX="17.0" layoutY="8.0" opacity="0.98">
                                  <image>
                                     <Image url="@icon/eval_logo.png" />
                                  </image>
                               </ImageView>
                            </children></AnchorPane>
                      </graphic></Button>
-                  <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-size: 14;" text="Evaluación" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-size: 20;" text="Evaluación" />
                </children>
             </VBox>
-            <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="110.0" prefWidth="100.0" spacing="10.0">
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" spacing="10.0">
                <children>
-                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="75.0" prefWidth="100.0" styleClass="buttonMain">
+                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="125.0" prefWidth="150.0" styleClass="buttonMain">
                      <graphic>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                        <AnchorPane>
                            <children>
-                              <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="17.0" layoutY="9.0">
+                              <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="17.0" layoutY="11.0">
                                  <image>
                                     <Image url="@icon/ajus_logo.png" />
                                  </image>
                               </ImageView>
                            </children></AnchorPane>
                      </graphic></Button>
-                  <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-size: 14;" text="Ajustes" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-size: 20;" text="Ajustes" />
                </children>
             </VBox>
          </children>

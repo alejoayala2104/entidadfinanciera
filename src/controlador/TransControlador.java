@@ -28,6 +28,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.ComboBox;
@@ -42,6 +44,20 @@ import javafx.stage.Window;
 import modelo.*;
 
 public class TransControlador implements Initializable {
+	
+	//Iconos
+	
+    @FXML
+    private ImageView inicio_logo = new ImageView (new Image (getClass().getResourceAsStream("/vista/icon/inicio_logo.png")));
+
+    @FXML
+    private ImageView reg_logo = new ImageView (new Image (getClass().getResourceAsStream("/vista/icon/reg_logo.png")));
+    
+    @FXML
+    private ImageView cons_logo = new ImageView (new Image (getClass().getResourceAsStream("/vista/icon/cons_logo.png")));
+    
+    @FXML
+    private ImageView act_logo = new ImageView (new Image (getClass().getResourceAsStream("/vista/icon/act_logo.png")));
 	
 	ControladorGeneral controlGeneral = new ControladorGeneral();
 		

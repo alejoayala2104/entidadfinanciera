@@ -1,13 +1,57 @@
+@font-face {
+	fx-font-family: 'Roboto Light';
+    src: url(Roboto-Light.ttf);
+}
 
-.buttonMenu{
-	-fx-font-color:white;
-	-fx-font-size: 20;
+@font-face {
+	fx-font-family: 'Roboto Regular';
+    src: url(Roboto-Regular.ttf);
+}
+
+.button{
+	-fx-font-family: 'Roboto Regular';
+	-fx-text-fill: white;
 	-fx-background-color:#401C72;
+	-fx-font-size:16;
+	-fx-background-radius: 6px;
 }
 
-.buttonMenu:hover{
+.button:hover{
+	-fx-font-family: 'Roboto Regular';
 	-fx-background-color:#541BA4;
+	-fx-font-size:16;
+	-fx-background-radius: 6px;
 }
+
+.buttonTrans{
+	-fx-font-family: 'Roboto Regular';
+	-fx-text-fill: white;
+	-fx-background-color:#401C72;
+	-fx-font-size:20;
+}
+
+.buttonTrans:hover{
+	-fx-background-color:#541BA4;
+	-fx-font-size:20;
+}
+
+.label{
+	-fx-font-family: 'Roboto Regular';
+}
+
+.labelLight{
+	-fx-font-family: 'Roboto Light';
+}
+
+.text-field{
+	-fx-font-family: 'Roboto Regular';
+}
+
+.text-area{
+	-fx-font-family: 'Roboto Regular';
+}
+
+
 
 
 

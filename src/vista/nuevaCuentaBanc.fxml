@@ -7,12 +7,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.NuevaCuentaBancControlador">
    <children>
-      <Label layoutX="56.0" layoutY="57.0" text="Nueva cuenta">
+      <Label layoutX="64.0" layoutY="57.0" text="Registrar cuenta">
          <font>
-            <Font size="36.0" />
+            <Font size="34.0" />
          </font>
       </Label>
       <Label layoutX="56.0" layoutY="151.0" text="Tipo de cuenta">

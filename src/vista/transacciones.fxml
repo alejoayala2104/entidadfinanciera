@@ -54,7 +54,7 @@
       <StackPane fx:id="stpCenter" prefHeight="700.0" prefWidth="878.0" BorderPane.alignment="CENTER">
          <children>
             <Label fx:id="regTransBienvenido" text="Bienvenido!" visible="false" />
-            <AnchorPane fx:id="regTransCedula" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="878.0">
+            <AnchorPane fx:id="regTransCedula" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="878.0" visible="false">
                <children>
                   <Label layoutX="164.0" layoutY="294.0" text="Cedula del cliente" />
                   <TextField fx:id="txfRegTransCedula" layoutX="164.0" layoutY="315.0" onKeyPressed="#validarInputEnteroSinLimite" />
@@ -140,7 +140,7 @@
                   <Button layoutX="281.0" layoutY="169.0" mnemonicParsing="false" onAction="#refrescarTableRegTransGarantias" text="Refrescar" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="regTransSoportesFiador" prefHeight="700.0" prefWidth="878.0">
+            <AnchorPane fx:id="regTransSoportesFiador" prefHeight="700.0" prefWidth="878.0" visible="false">
                <children>
                   <Label layoutX="76.0" layoutY="230.0" text="Fiador">
                      <font>
@@ -322,7 +322,7 @@
                   <Button layoutX="691.0" layoutY="635.0" mnemonicParsing="false" onAction="#actTransUpdateGarantias" text="Guardar" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="actTransFiador" prefHeight="700.0" prefWidth="878.0" visible="false">
+            <AnchorPane fx:id="actTransFiador" prefHeight="700.0" prefWidth="878.0">
                <children>
                   <Label layoutX="76.0" layoutY="230.0" text="Fiador">
                      <font>
@@ -338,6 +338,7 @@
                   </Label>
                   <Button layoutX="68.0" layoutY="639.0" mnemonicParsing="false" onAction="#botonAtras" text="Atrás" />
                   <Button layoutX="760.0" layoutY="639.0" mnemonicParsing="false" onAction="#actTransUpdateFiador" text="Guardar" />
+                  <Button layoutX="71.0" layoutY="339.0" mnemonicParsing="false" onAction="#abrirClientesOtraVentana" text="Registrar cliente" />
                </children>
             </AnchorPane>
             <AnchorPane fx:id="actTransInfoPago" prefHeight="200.0" prefWidth="200.0" visible="false">

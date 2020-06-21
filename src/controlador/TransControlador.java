@@ -978,7 +978,7 @@ public class TransControlador implements Initializable {
     public void actTransContinuarAModificacion(ActionEvent event) throws SQLException{
     	
     	if(tblActTrans.getSelectionModel().getSelectedItem()==null) {
-    		controlGeneral.mostrarAlerta(AlertType.ERROR, "ERROR: Actualizar transacción", "No se seleccionó transacción",
+    		controlGeneral.mostrarAlerta(AlertType.ERROR, "ERROR: Actualizar transacción", "Transacción no seleccionada",
     				"Por favor elija una de las transacciones de la tabla y presione continuar");
     	return;
     	}
@@ -1299,4 +1299,4 @@ public class TransControlador implements Initializable {
 	
 	}
 
-}
+ }

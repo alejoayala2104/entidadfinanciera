@@ -60,7 +60,7 @@ public class NuevaCuentaBancControlador {
     	nuevaCuentaBancaria.getClienteCuenta()+"','"+nuevaCuentaBancaria.getBancoCuentaBanc()+"','"+nuevaCuentaBancaria.getTipoCuentaBanc()+"');";
     	controlGeneral.ejecutarSentenciaInsert(insertarCuenta);
     	
-    	controlGeneral.mostrarAlertaSinContent(AlertType.INFORMATION, "Cuenta bancaría guardada", "Cuenta bancaria con éxito");    	    	
+    	controlGeneral.mostrarAlertaSinContent(AlertType.INFORMATION, "Cuenta bancaría guardada", "Cuenta bancaria registrada con éxito");    	    	
     	
     	//Cerrar la ventana.
     	cancelarNuevaCuenta(event);  

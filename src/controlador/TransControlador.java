@@ -784,7 +784,7 @@ public class TransControlador implements Initializable {
     	ResultSet clienteTrans = controlGeneral.ejecutarSentencia("select cliente.* from cliente "
     			+ "join transacciones on cedula=clientetrans where codtrans = "+transSelected.getCodTrans()+";");
     	if(clienteTrans.next()) {
-    	datosCliente = "\nCLIENTE"+
+    	datosCliente = "\n\nCLIENTE"+
 				    	"\nCédula: " + clienteTrans.getString("cedula")+
 				    	"\nNombre: " +clienteTrans.getString("nombres")+
 				    	"\nTeléfono: " + clienteTrans.getString("telefono")+
@@ -799,7 +799,7 @@ public class TransControlador implements Initializable {
     		ResultSet cuentaTrans = controlGeneral.ejecutarSentencia("select cuentasbancarias.* from cuentasbancarias join inversiones on cuentapagogeneral=numcuentabanc\r\n" + 
     				"join transacciones on codtrans=codinversion where codtrans ="+transSelected.getCodTrans()+";");
     		if(cuentaTrans.next()) {
-    		datosExtra = "\nCUENTA BANCARIA"+
+    		datosExtra = "\n\nCUENTA BANCARIA"+
     					"\nNúmero de cuenta: " + cuentaTrans.getString("numcuentabanc")+
     					"\nBanco: " + cuentaTrans.getString("bancocuentabanc")+
     					"\nTipo de cuenta: " + cuentaTrans.getString("tipocuentabanc");
@@ -816,7 +816,7 @@ public class TransControlador implements Initializable {
     				"where codtrans = "+transSelected.getCodTrans()+";");    		
     		
     		if(fiadorTrans.next()) {
-    		datosExtra = "\nFIADOR"+
+    		datosExtra = "\n\nFIADOR"+
     				"\nCédula: " + fiadorTrans.getString("cedula")+
     		    	"\nNombre: " +fiadorTrans.getString("nombres")+
     		    	"\nTeléfono: " + fiadorTrans.getString("telefono")+
@@ -827,7 +827,7 @@ public class TransControlador implements Initializable {
     		if(garantiasTrans.next()) {
     			ResultSet garantiasTrans2 = controlGeneral.ejecutarSentencia("select garantias.* from garantias natural join garantias_prestamo join transacciones on codprestamo=codtrans\r\n" + 
         				"where codtrans = "+transSelected.getCodTrans()+";"); 
-	    		datosGarantias.append("\nGARANTIAS");
+	    		datosGarantias.append("\n\nGARANTIAS");
 	    		while(garantiasTrans2.next()) {
 	    			datosGarantias.append("\n--------------------------------------"+
 	    							"\nCódigo: " + garantiasTrans2.getInt("codgarantia")+
@@ -843,6 +843,8 @@ public class TransControlador implements Initializable {
     	String stgVerDetalles = "DETALLES\n" + datosTrans + datosCliente+datosExtra;   	
     	
     	txaVerDetalles.setText(stgVerDetalles);
+    	txaVerDetalles.setPrefSize(500, 500);
+    	txaVerDetalles.setStyle("-fx-font-size:16");
     	
     	Scene verDetallesScene = new Scene(verDetalles);
 		Stage verDetallesStage = new Stage();
